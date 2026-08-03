@@ -1,49 +1,65 @@
+import { useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 
 export default function AlbumCard({ album }) {
+  const [loaded, setLoaded] = useState(false)
+  const onLoad = useCallback(() => setLoaded(true), [])
+
   return (
-    <Link to={`/album/${album.id}`} style={{ textDecoration: 'none' }}>
-      <div className="card" style={{
-        transition: 'transform 0.2s, box-shadow 0.2s',
-        cursor: 'pointer',
-        overflow: 'hidden'
-      }}
-        onMouseEnter={e => {
-          e.currentTarget.style.transform = 'translateY(-4px)'
-          e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.4)'
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.transform = 'translateY(0)'
-          e.currentTarget.style.boxShadow = 'none'
-        }}
-      >
-        {album.coverUrl ? (
-          <img
-            src={album.coverUrl}
-            alt={album.name}
-            style={{ width: '100%', aspectRatio: '1/1', objectFit: 'cover', borderRadius: 8, marginBottom: 12 }}
-          />
-        ) : (
+    <Link to={`/album/${album.id}`} style={{ textDecoration: 'none', display: 'block' }}>
+      <div className="album-card-wrapper">
+        <div className="card" style={{ overflow: 'hidden' }}>
           <div style={{
+            position: 'relative',
             width: '100%',
             aspectRatio: '1/1',
-            background: 'linear-gradient(135deg, #1db954, #191414)',
-            borderRadius: 8,
-            marginBottom: 12,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 48,
-            fontWeight: 800,
-            color: '#fff'
+            background: 'var(--elevated)',
+            overflow: 'hidden'
           }}>
-            {album.name.charAt(0)}
+            {album.coverUrl && (
+              <img
+                src={album.coverUrl}
+                alt={album.name}
+                loading="lazy"
+                onLoad={onLoad}
+                className="album-cover-img"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  display: 'block',
+                  opacity: loaded ? 1 : 0,
+                  transition: 'opacity .4s ease, transform .35s ease'
+                }}
+              />
+            )}
+            {!loaded && (
+              <div style={{
+                position: 'absolute', inset: 0,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: 'var(--text-muted)', fontSize: 13
+              }}>
+                Cargando...
+              </div>
+            )}
           </div>
-        )}
-        <h3 style={{ fontSize: 15, color: '#fff', marginBottom: 4, lineHeight: 1.3 }}>{album.name}</h3>
-        <p style={{ fontSize: 13, color: '#888' }}>
-          {album.year} · {album.type === 'ALBUM' ? 'Album' : album.type === 'EP' ? 'EP' : 'Mixtape'}
-        </p>
+          <div style={{ padding: '14px 16px' }}>
+            <div style={{
+              fontWeight: 600,
+              fontSize: 15,
+              color: 'var(--text)',
+              marginBottom: 4,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap'
+            }}>
+              {album.name}
+            </div>
+            <div style={{ fontSize: 13, color: 'var(--text-dim)' }}>
+              {album.year} &middot; {album.type === 'ALBUM' ? 'Album' : album.type === 'EP' ? 'EP' : 'Mixtape'}
+            </div>
+          </div>
+        </div>
       </div>
     </Link>
   )

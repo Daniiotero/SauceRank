@@ -7,6 +7,7 @@ public class SongResponse {
     private String featuredArtists;
     private String spotifyTrackId;
     private boolean votedByCurrentUser;
+    private int userScore;
     private long voteCount;
 
     public Long getId() { return id; }
@@ -21,6 +22,8 @@ public class SongResponse {
     public void setSpotifyTrackId(String spotifyTrackId) { this.spotifyTrackId = spotifyTrackId; }
     public boolean isVotedByCurrentUser() { return votedByCurrentUser; }
     public void setVotedByCurrentUser(boolean votedByCurrentUser) { this.votedByCurrentUser = votedByCurrentUser; }
+    public int getUserScore() { return userScore; }
+    public void setUserScore(int userScore) { this.userScore = userScore; }
     public long getVoteCount() { return voteCount; }
     public void setVoteCount(long voteCount) { this.voteCount = voteCount; }
 }

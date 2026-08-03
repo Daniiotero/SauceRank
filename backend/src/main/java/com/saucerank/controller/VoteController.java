@@ -24,7 +24,7 @@ public class VoteController {
     public ResponseEntity<?> vote(@Valid @RequestBody VoteRequest request, Authentication auth) {
         try {
             Long userId = (Long) auth.getPrincipal();
-            voteService.vote(userId, request.getSongId());
+            voteService.vote(userId, request.getSongId(), request.getScore());
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -47,5 +47,11 @@ public class VoteController {
     public ResponseEntity<Boolean> checkVote(@PathVariable Long songId, Authentication auth) {
         Long userId = (Long) auth.getPrincipal();
         return ResponseEntity.ok(voteService.hasVoted(userId, songId));
+    }
+
+    @GetMapping("/score/{songId}")
+    public ResponseEntity<Integer> getScore(@PathVariable Long songId, Authentication auth) {
+        Long userId = (Long) auth.getPrincipal();
+        return ResponseEntity.ok(voteService.getUserScore(userId, songId));
     }
 }

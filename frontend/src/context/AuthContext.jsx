@@ -11,18 +11,35 @@ export function AuthProvider({ children }) {
     const stored = localStorage.getItem('user')
     const token = localStorage.getItem('token')
     if (stored && token) {
-      setUser(JSON.parse(stored))
+      authApi.check().then(() => {
+        setUser(JSON.parse(stored))
+      }).catch(() => {
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
+      }).finally(() => setLoading(false))
+    } else {
+      setLoading(false)
     }
-    setLoading(false)
   }, [])
 
   const login = async (username, password) => {
-    const res = await authApi.login({ username, password })
-    const data = res.data
-    localStorage.setItem('token', data.token)
-    localStorage.setItem('user', JSON.stringify({ id: data.userId, username: data.username }))
-    setUser({ id: data.userId, username: data.username })
-    return data
+    console.log('[Auth] login called', username)
+    try {
+      const res = await authApi.login({ username, password })
+      console.log('[Auth] login response', res.status, res.data)
+      const data = res.data
+      if (!data || !data.token) {
+        console.error('[Auth] invalid response data', data)
+        throw new Error('Respuesta inválida del servidor')
+      }
+      localStorage.setItem('token', data.token)
+      localStorage.setItem('user', JSON.stringify({ id: data.userId, username: data.username }))
+      setUser({ id: data.userId, username: data.username })
+      return data
+    } catch (err) {
+      console.error('[Auth] login error', err)
+      throw err
+    }
   }
 
   const register = async (username, email, password) => {

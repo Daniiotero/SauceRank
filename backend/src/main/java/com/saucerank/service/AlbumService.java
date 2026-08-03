@@ -64,6 +64,12 @@ public class AlbumService {
             sr.setVoteCount(voteCounts.getOrDefault(song.getId(), 0L));
             sr.setVotedByCurrentUser(currentUserId != null &&
                     voteRepository.existsByUserIdAndSongId(currentUserId, song.getId()));
+            if (currentUserId != null) {
+                int us = voteRepository.findByUserIdAndSongId(currentUserId, song.getId())
+                        .map(v -> v.getScore() != null ? v.getScore() : 0)
+                        .orElse(0);
+                sr.setUserScore(us);
+            }
             songResponses.add(sr);
         }
         response.setSongs(songResponses);

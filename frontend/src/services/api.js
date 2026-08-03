@@ -16,7 +16,8 @@ api.interceptors.request.use(config => {
 api.interceptors.response.use(
   response => response,
   error => {
-    if (error.response?.status === 401) {
+    if ((error.response?.status === 401 || error.response?.status === 403) &&
+        !error.config.url?.startsWith('/auth/')) {
       localStorage.removeItem('token')
       localStorage.removeItem('user')
       window.location.href = '/login'
@@ -27,7 +28,8 @@ api.interceptors.response.use(
 
 export const authApi = {
   register: (data) => api.post('/auth/register', data),
-  login: (data) => api.post('/auth/login', data)
+  login: (data) => api.post('/auth/login', data),
+  check: () => api.get('/check-token')
 }
 
 export const albumApi = {
@@ -36,7 +38,7 @@ export const albumApi = {
 }
 
 export const voteApi = {
-  vote: (songId) => api.post('/votes', { songId }),
+  vote: (songId, score) => api.post('/votes', { songId, score }),
   unvote: (songId) => api.delete(`/votes/${songId}`),
   getTop: () => api.get('/votes/top'),
   check: (songId) => api.get(`/votes/check/${songId}`)

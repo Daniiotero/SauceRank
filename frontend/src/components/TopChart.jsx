@@ -1,66 +1,76 @@
-import { Link } from 'react-router-dom'
-
-function getRankStyle(rank) {
-  if (rank === 1) return { background: '#ffd700', color: '#000' }
-  if (rank === 2) return { background: '#c0c0c0', color: '#000' }
-  if (rank === 3) return { background: '#cd7f32', color: '#fff' }
-  return { background: '#222', color: '#888' }
-}
-
 export default function TopChart({ songs }) {
   if (!songs || songs.length === 0) {
     return (
-      <div className="card" style={{ textAlign: 'center', padding: 40 }}>
-        <p style={{ fontSize: 18, color: '#888' }}>Aun no hay votos. Se el primero en votar!</p>
+      <div className="card" style={{ textAlign: 'center', padding: '48px 24px' }}>
+        <p style={{ color: 'var(--text-dim)' }}>
+          Aun no hay votos. Se el primero en votar!
+        </p>
       </div>
     )
   }
 
   return (
     <div>
-      {songs.map(song => (
-        <div key={song.songId} style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 16,
-          padding: '14px 16px',
-          background: song.rank === 1 ? '#1a2a1a' : song.rank <= 3 ? '#1a1a1a' : 'transparent',
-          borderRadius: song.rank <= 3 ? 12 : 0,
-          marginBottom: 4
-        }}>
-          <div style={{
-            width: 36,
-            height: 36,
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontWeight: 800,
-            fontSize: 14,
-            ...getRankStyle(song.rank)
-          }}>
-            {song.rank}
-          </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontWeight: 600, fontSize: 15 }}>{song.title}</div>
-            <div style={{ fontSize: 13, color: '#888' }}>
-              {song.albumName} ({song.albumYear})
-              {song.featuredArtists && ` · ft. ${song.featuredArtists}`}
+      {songs.map((song, index) => {
+        const inPodium = song.rank <= 3
+        return (
+          <div
+            key={song.songId}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 14,
+              padding: '12px 16px',
+              marginBottom: 2,
+              transition: 'background .15s',
+              background: inPodium ? 'linear-gradient(135deg, rgba(110,184,208,0.06), transparent)' : 'transparent',
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = inPodium ? 'linear-gradient(135deg, rgba(110,184,208,0.08), transparent)' : 'var(--hover)'}
+            onMouseLeave={e => e.currentTarget.style.background = inPodium ? 'linear-gradient(135deg, rgba(110,184,208,0.06), transparent)' : 'transparent'}
+          >
+            <span style={{
+              width: 34,
+              height: 34,
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 700,
+              fontSize: 14,
+              flexShrink: 0,
+              background: inPodium ? 'linear-gradient(180deg, #7cc4dc, #6eb8d0)' : 'linear-gradient(180deg, #1e1e22, #141416)',
+              color: inPodium ? '#08080a' : 'var(--text-dim)',
+              boxShadow: inPodium ? 'inset 0 1px 0 rgba(255,255,255,0.2), 0 0 8px var(--accent-glow)' : 'inset 0 1px 0 rgba(255,255,255,0.04)'
+            }}>
+              {song.rank}
+            </span>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{
+                fontWeight: 500,
+                fontSize: 15,
+                color: inPodium ? 'var(--text)' : 'var(--text)',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
+              }}>
+                {song.title}
+              </div>
+              <div style={{ fontSize: 13, color: 'var(--text-dim)' }}>
+                {song.albumName}
+                {song.featuredArtists && ` · ft. ${song.featuredArtists}`}
+              </div>
             </div>
+            <span style={{
+              color: inPodium ? 'var(--accent)' : 'var(--text-dim)',
+              fontWeight: inPodium ? 600 : 500,
+              fontSize: 13,
+              fontVariantNumeric: 'tabular-nums'
+            }}>
+              {song.voteCount} voto{song.voteCount !== 1 ? 's' : ''}
+            </span>
           </div>
-          <div style={{
-            background: '#1db954',
-            color: '#000',
-            fontWeight: 700,
-            fontSize: 14,
-            padding: '4px 14px',
-            borderRadius: 20,
-            whiteSpace: 'nowrap'
-          }}>
-            {song.voteCount} voto{song.voteCount !== 1 ? 's' : ''}
-          </div>
-        </div>
-      ))}
+        )
+      })}
     </div>
   )
 }

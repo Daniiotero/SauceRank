@@ -35,6 +35,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/albums/**").permitAll()
                 .requestMatchers("/api/votes/top").permitAll()
+                .requestMatchers("/api/check-token").authenticated()
                 .requestMatchers("/api/votes/**").authenticated()
                 .requestMatchers("/api/users/search").authenticated()
                 .requestMatchers("/api/users/**").authenticated()

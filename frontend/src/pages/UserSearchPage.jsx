@@ -6,67 +6,109 @@ export default function UserSearchPage() {
   const [query, setQuery] = useState('')
   const [users, setUsers] = useState([])
   const [searched, setSearched] = useState(false)
+  const [searching, setSearching] = useState(false)
 
   const handleSearch = async (e) => {
     e.preventDefault()
     if (!query.trim()) return
+    setSearching(true)
     try {
       const res = await userApi.search(query.trim())
       setUsers(res.data)
       setSearched(true)
     } catch (err) {
       console.error(err)
+    } finally {
+      setSearching(false)
     }
   }
 
   return (
-    <div>
-      <div style={{ textAlign: 'center', marginBottom: 32 }}>
-        <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 8 }}>
-          Buscar <span style={{ color: '#1db954' }}>Usuarios</span>
-        </h1>
-        <p style={{ color: '#888', fontSize: 14 }}>
-          Encuentra usuarios y ve sus canciones votadas
-        </p>
-      </div>
+    <div className="fade-in">
+      <h1 style={{
+        fontSize: 28,
+        fontWeight: 800,
+        marginBottom: 8,
+        letterSpacing: '-.02em'
+      }}>
+        Usuarios
+      </h1>
+      <p style={{ color: 'var(--text-dim)', fontSize: 14, marginBottom: 28, maxWidth: 460 }}>
+        Encontra usuarios y mira sus canciones votadas
+      </p>
 
-      <form onSubmit={handleSearch} style={{ maxWidth: 500, margin: '0 auto 32px', display: 'flex', gap: 8 }}>
+      <form onSubmit={handleSearch} style={{
+        maxWidth: 460,
+        marginBottom: 28,
+        display: 'flex',
+        gap: 8
+      }}>
         <input
           value={query}
           onChange={e => setQuery(e.target.value)}
           placeholder="Buscar por nombre de usuario..."
         />
-        <button type="submit" className="btn btn-primary" style={{ whiteSpace: 'nowrap' }}>
-          Buscar
+        <button
+          type="submit"
+          className="btn btn-primary"
+          disabled={searching || !query.trim()}
+          style={{ whiteSpace: 'nowrap' }}
+        >
+          {searching ? 'Buscando...' : 'Buscar'}
         </button>
       </form>
 
-      {searched && users.length === 0 && (
-        <div className="card" style={{ textAlign: 'center', padding: 40 }}>
-          <p style={{ color: '#888' }}>No se encontraron usuarios</p>
+      {searched && !searching && users.length === 0 && (
+        <div className="card" style={{
+          textAlign: 'center',
+          padding: 36,
+          maxWidth: 460
+        }}>
+          <p style={{ color: 'var(--text-dim)' }}>No se encontraron usuarios</p>
         </div>
       )}
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxWidth: 500, margin: '0 auto' }}>
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 6,
+        maxWidth: 460
+      }}>
         {users.map(u => (
-          <Link key={u.id} to={`/users/${u.id}`} style={{ textDecoration: 'none' }}>
-            <div className="card" style={{
-              display: 'flex', alignItems: 'center', gap: 16, padding: '16px 20px',
-              transition: 'background 0.2s'
-            }}
-              onMouseEnter={e => e.currentTarget.style.background = '#222'}
-              onMouseLeave={e => e.currentTarget.style.background = '#1a1a1a'}
-            >
+          <Link
+            key={u.id}
+            to={`/users/${u.id}`}
+            style={{ textDecoration: 'none' }}
+          >
+            <div className="card card-hover" style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 14,
+              padding: '14px 18px'
+            }}>
               <div style={{
-                width: 44, height: 44, borderRadius: '50%',
-                background: '#1db954', display: 'flex', alignItems: 'center',
-                justifyContent: 'center', fontWeight: 700, fontSize: 18, color: '#000'
+                width: 42,
+                height: 42,
+                borderRadius: '50%',
+                background: 'linear-gradient(180deg, #7cc4dc, #6eb8d0)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 700,
+                fontSize: 16,
+                color: '#08080a',
+                flexShrink: 0,
+                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.2)'
               }}>
                 {u.username.charAt(0).toUpperCase()}
               </div>
-              <div>
-                <div style={{ fontWeight: 600, fontSize: 16 }}>{u.username}</div>
-                <div style={{ fontSize: 13, color: '#888' }}>{u.email}</div>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontWeight: 500, fontSize: 15, color: 'var(--text)' }}>
+                  {u.username}
+                </div>
+                <div style={{ fontSize: 13, color: 'var(--text-dim)' }}>
+                  {u.email}
+                </div>
               </div>
             </div>
           </Link>

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class VoteService {
@@ -28,9 +29,13 @@ public class VoteService {
     }
 
     @Transactional
-    public void vote(Long userId, Long songId) {
-        if (voteRepository.existsByUserIdAndSongId(userId, songId)) {
-            throw new RuntimeException("Already voted for this song");
+    public void vote(Long userId, Long songId, int score) {
+        Optional<Vote> existing = voteRepository.findByUserIdAndSongId(userId, songId);
+        if (existing.isPresent()) {
+            Vote vote = existing.get();
+            vote.setScore(score);
+            voteRepository.save(vote);
+            return;
         }
 
         User user = userRepository.findById(userId)
@@ -38,7 +43,7 @@ public class VoteService {
         Song song = songRepository.findById(songId)
                 .orElseThrow(() -> new RuntimeException("Song not found"));
 
-        voteRepository.save(new Vote(user, song));
+        voteRepository.save(new Vote(user, song, score));
     }
 
     @Transactional
@@ -48,6 +53,12 @@ public class VoteService {
 
     public boolean hasVoted(Long userId, Long songId) {
         return voteRepository.existsByUserIdAndSongId(userId, songId);
+    }
+
+    public int getUserScore(Long userId, Long songId) {
+        return voteRepository.findByUserIdAndSongId(userId, songId)
+                .map(Vote::getScore)
+                .orElse(0);
     }
 
     public List<TopSongResponse> getTopSongs(int limit) {

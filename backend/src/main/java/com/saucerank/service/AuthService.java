@@ -40,10 +40,10 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
+            throw new RuntimeException("Contrasena incorrecta");
         }
 
         String token = jwtUtil.generateToken(user.getId(), user.getUsername());

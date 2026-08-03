@@ -25,15 +25,19 @@ export default function SpotifyPreview({ spotifyTrackId }) {
           width: 32,
           height: 32,
           borderRadius: '50%',
-          border: 'none',
-          background: '#1DB954',
-          color: '#fff',
+          border: '1px solid var(--border-light)',
+          background: 'linear-gradient(180deg, #1e1e22, #141416)',
+          color: 'var(--accent)',
           cursor: 'pointer',
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
-          flexShrink: 0
+          flexShrink: 0,
+          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)',
+          transition: 'all .15s'
         }}
+        onMouseEnter={e => { e.currentTarget.style.background = 'linear-gradient(180deg, #7cc4dc, #6eb8d0)'; e.currentTarget.style.color = '#08080a'; e.currentTarget.style.borderColor = 'var(--accent-border)'; e.currentTarget.style.boxShadow = '0 0 12px var(--accent-glow)' }}
+        onMouseLeave={e => { e.currentTarget.style.background = 'linear-gradient(180deg, #1e1e22, #141416)'; e.currentTarget.style.color = 'var(--accent)'; e.currentTarget.style.borderColor = 'var(--border-light)'; e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.04)' }}
         title="Escuchar en Spotify"
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -51,8 +55,10 @@ export default function SpotifyPreview({ spotifyTrackId }) {
             marginTop: 8,
             width: 300,
             maxWidth: '80vw',
-            background: '#282828',
-            borderRadius: 8,
+            background: '#0e0e10',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius)',
+            boxShadow: 'var(--shadow-lg)',
             padding: 8
           }}
         >
@@ -62,9 +68,9 @@ export default function SpotifyPreview({ spotifyTrackId }) {
               style={{
                 background: 'none',
                 border: 'none',
-                color: '#b3b3b3',
+                color: 'var(--text-dim)',
                 cursor: 'pointer',
-                fontSize: 16,
+                fontSize: 18,
                 lineHeight: 1,
                 padding: '0 2px'
               }}
@@ -79,7 +85,7 @@ export default function SpotifyPreview({ spotifyTrackId }) {
             height="80"
             frameBorder="0"
             allow="encrypted-media; clipboard-write"
-            style={{ borderRadius: 8 }}
+            style={{ borderRadius: 'var(--radius-sm)' }}
             title="Spotify"
           />
         </div>

@@ -6,6 +6,7 @@ public class VoteDetailResponse {
     private String featuredArtists;
     private String albumName;
     private String spotifyTrackId;
+    private Integer score;
     private String votedAt;
 
     public Long getSongId() { return songId; }
@@ -18,6 +19,8 @@ public class VoteDetailResponse {
     public void setAlbumName(String albumName) { this.albumName = albumName; }
     public String getSpotifyTrackId() { return spotifyTrackId; }
     public void setSpotifyTrackId(String spotifyTrackId) { this.spotifyTrackId = spotifyTrackId; }
+    public Integer getScore() { return score; }
+    public void setScore(Integer score) { this.score = score; }
     public String getVotedAt() { return votedAt; }
     public void setVotedAt(String votedAt) { this.votedAt = votedAt; }
 }

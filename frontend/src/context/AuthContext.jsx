@@ -23,28 +23,23 @@ export function AuthProvider({ children }) {
   }, [])
 
   const login = async (username, password) => {
-    console.log('[Auth] login called', username)
-    try {
-      const res = await authApi.login({ username, password })
-      console.log('[Auth] login response', res.status, res.data)
-      const data = res.data
-      if (!data || !data.token) {
-        console.error('[Auth] invalid response data', data)
-        throw new Error('Respuesta inválida del servidor')
-      }
-      localStorage.setItem('token', data.token)
-      localStorage.setItem('user', JSON.stringify({ id: data.userId, username: data.username }))
-      setUser({ id: data.userId, username: data.username })
-      return data
-    } catch (err) {
-      console.error('[Auth] login error', err)
-      throw err
+    const res = await authApi.login({ username, password })
+    const data = res.data
+    if (!data || !data.token) {
+      throw new Error('Respuesta invalida del servidor')
     }
+    localStorage.setItem('token', data.token)
+    localStorage.setItem('user', JSON.stringify({ id: data.userId, username: data.username }))
+    setUser({ id: data.userId, username: data.username })
+    return data
   }
 
   const register = async (username, email, password) => {
     const res = await authApi.register({ username, email, password })
     const data = res.data
+    if (!data || !data.token) {
+      throw new Error('Respuesta invalida del servidor')
+    }
     localStorage.setItem('token', data.token)
     localStorage.setItem('user', JSON.stringify({ id: data.userId, username: data.username }))
     setUser({ id: data.userId, username: data.username })

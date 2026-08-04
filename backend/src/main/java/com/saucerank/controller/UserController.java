@@ -23,8 +23,8 @@ public class UserController {
         return ResponseEntity.ok(userService.searchUsers(q));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserProfileResponse> getUserProfile(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getUserProfile(id));
+    @GetMapping("/{username}")
+    public ResponseEntity<UserProfileResponse> getUserProfile(@PathVariable String username) {
+        return ResponseEntity.ok(userService.getUserProfileByUsername(username));
     }
 }

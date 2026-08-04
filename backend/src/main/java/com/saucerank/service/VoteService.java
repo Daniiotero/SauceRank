@@ -70,6 +70,7 @@ public class VoteService {
             if (rank > limit) break;
             Long songId = (Long) row[0];
             Long count = (Long) row[1];
+            double avgScore = row[2] != null ? ((Number) row[2]).doubleValue() : 0.0;
 
             Song song = songRepository.findById(songId).orElse(null);
             if (song == null) continue;
@@ -82,6 +83,7 @@ public class VoteService {
                     song.getAlbum().getYear(),
                     song.getSpotifyTrackId(),
                     count,
+                    avgScore,
                     rank
             ));
             rank++;

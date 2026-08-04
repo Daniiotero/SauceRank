@@ -2,7 +2,15 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { albumApi, voteApi } from '../services/api'
 import { useAuth } from '../context/AuthContext'
-import SongRow from '../components/SongRow'
+import SongList from '../components/SongList'
+import StarRating from '../components/StarRating'
+import SpotifyPreview from '../components/SpotifyPreview'
+import Icon from '../components/ui/Icon'
+import EmptyState from '../components/ui/EmptyState'
+import { Skeleton, SongListSkeleton } from '../components/ui/Skeleton'
+import { PrimaryButton } from '../components/ui/Button'
+
+const TYPE_LABEL = { ALBUM: 'Album', EP: 'EP', MIXTAPE: 'Mixtape' }
 
 export default function AlbumPage() {
   const { id } = useParams()
@@ -36,13 +44,16 @@ export default function AlbumPage() {
   if (loading) {
     return (
       <div className="fade-in">
-        <div style={{ display: 'flex', gap: 24, marginBottom: 32, alignItems: 'flex-start', flexWrap: 'wrap' }}>
-          <div className="skeleton" style={{ width: 200, height: 200 }} />
+        <div style={{ display: 'flex', gap: 'var(--space-5)', marginBottom: 'var(--space-6)', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+          <Skeleton width={200} height={200} style={{ borderRadius: 'var(--radius-md)' }} />
           <div style={{ flex: 1, minWidth: 200 }}>
-            <div className="skeleton skeleton-text" style={{ width: 80, height: 12 }} />
-            <div className="skeleton" style={{ width: '60%', height: 28, marginTop: 8 }} />
-            <div className="skeleton skeleton-text short" />
+            <SkeletonText width={90} height={12} />
+            <Skeleton width="60%" height={30} style={{ marginTop: 'var(--space-2)' }} />
+            <SkeletonText width={45} />
           </div>
+        </div>
+        <div className="card">
+          <SongListSkeleton count={8} />
         </div>
       </div>
     )
@@ -50,90 +61,69 @@ export default function AlbumPage() {
 
   if (!album) {
     return (
-      <div className="fade-in" style={{ textAlign: 'center', marginTop: 60 }}>
-        <p style={{ color: 'var(--text-dim)', fontSize: 16 }}>Album no encontrado</p>
-        <Link to="/" style={{ display: 'inline-block', marginTop: 16 }}>Volver a discos</Link>
-      </div>
+      <EmptyState
+        icon="music"
+        title="Album no encontrado"
+        description="El album que buscas no existe o fue movido."
+        action={<PrimaryButton to="/" size="sm">Volver a discos</PrimaryButton>}
+        style={{ marginTop: 'var(--space-7)' }}
+      />
     )
   }
 
   return (
     <div className="fade-in">
-      <Link to="/" style={{
-        color: 'var(--text-dim)',
-        fontSize: 14,
-        marginBottom: 24,
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 4
-      }}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-        </svg>
+      <Link to="/" style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 'var(--space-5)', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+        <Icon name="arrowLeft" size={16} />
         Volver
       </Link>
 
       <div className="card" style={{
         display: 'flex',
-        gap: 28,
-        marginBottom: 36,
+        gap: 'var(--space-6)',
+        marginBottom: 'var(--space-6)',
         alignItems: 'flex-end',
         flexWrap: 'wrap',
-        padding: 24,
-        background: 'linear-gradient(180deg, rgba(110,184,208,0.03) 0%, #0c0c0e 100%)'
+        padding: 'var(--space-5)',
+        background: 'linear-gradient(180deg, rgba(110,184,208,0.04) 0%, var(--bg-raised) 100%)'
       }}>
         <div style={{
           width: 200,
           height: 200,
           flexShrink: 0,
           overflow: 'hidden',
-          boxShadow: '0 4px 16px rgba(0,0,0,0.6), 0 0 20px var(--accent-glow)'
+          boxShadow: 'var(--shadow-3), var(--ice-glow)',
+          borderRadius: 'var(--radius-md)'
         }}>
           {album.coverUrl ? (
-            <img
-              src={album.coverUrl}
-              alt={album.name}
-              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-            />
+            <img src={album.coverUrl} alt={`Portada de ${album.name}`} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
           ) : (
             <div style={{
               width: '100%', height: '100%',
-              background: 'var(--elevated)',
+              background: 'var(--surface-2)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 64, fontWeight: 900, color: 'var(--accent)'
+              fontSize: 64, fontWeight: 700, fontFamily: 'var(--font-display)', color: 'var(--accent)'
             }}>
               {album.name.charAt(0)}
             </div>
           )}
         </div>
         <div style={{ flex: 1, minWidth: 200 }}>
-          <p style={{
-            fontSize: 11,
-            color: 'var(--accent)',
-            textTransform: 'uppercase',
-            letterSpacing: '.1em',
-            fontWeight: 600,
-            marginBottom: 4
-          }}>
-            {album.type === 'ALBUM' ? 'Album' : album.type === 'EP' ? 'EP' : 'Mixtape'}
+          <p className="eyebrow" style={{ marginBottom: 'var(--space-2)' }}>
+            {TYPE_LABEL[album.type] || album.type}
           </p>
-          <h1 style={{
-            fontSize: 32,
-            fontWeight: 800,
-            marginBottom: 8,
-            lineHeight: 1.2,
-            letterSpacing: '-.02em'
-          }}>
+          <h1 className="display" style={{ fontSize: 'clamp(28px, 5vw, 42px)', marginBottom: 'var(--space-2)' }}>
             {album.name}
           </h1>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--text-dim)', fontSize: 14 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--text-secondary)', fontSize: 14 }}>
             <span>{album.year}</span>
-            <span style={{ width: 3, height: 3, borderRadius: '50%', background: 'var(--text-dim)' }} />
+            <span style={{ width: 3, height: 3, borderRadius: '50%', background: 'var(--text-muted)' }} />
             <span>{album.songs.length} canciones</span>
           </div>
           {!user && (
-            <p style={{ marginTop: 14, fontSize: 13, color: 'var(--text-dim)' }}>
-              <Link to="/login" style={{ color: 'var(--accent)', fontWeight: 600 }}>Inicia sesion</Link> para votar
+            <p style={{ marginTop: 'var(--space-4)', fontSize: 13, color: 'var(--text-secondary)' }}>
+              <PrimaryButton to="/login" size="sm" style={{ marginRight: 8 }}>Inicia sesion</PrimaryButton>
+              para votar
             </p>
           )}
         </div>
@@ -147,23 +137,38 @@ export default function AlbumPage() {
           alignItems: 'center',
           gap: 10
         }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)">
-            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
-          </svg>
-          <h2 style={{ fontSize: 15, fontWeight: 600 }}>Canciones</h2>
+          <Icon name="music" size={16} className="text-ice" />
+          <h2 style={{ fontSize: 15, fontWeight: 600, fontFamily: 'var(--font-display)', letterSpacing: '0.02em' }}>
+            Canciones
+          </h2>
         </div>
-        <div>
+        <SongList>
           {album.songs.map(song => (
-            <SongRow
-              key={song.id}
-              song={song}
-              onVote={handleVote}
-              loading={voting}
-              disabled={!user}
-            />
+            <SongList.Row key={song.id}>
+              <SongList.TrackNumber>{song.trackNumber}</SongList.TrackNumber>
+              <SongList.Info
+                title={song.title}
+                subtitle={song.featuredArtists ? `ft. ${song.featuredArtists}` : null}
+              />
+              <SongList.Action>
+                <SpotifyPreview spotifyTrackId={song.spotifyTrackId} />
+                {user && (
+                  <StarRating
+                    score={song.votedByCurrentUser ? song.userScore : 0}
+                    onRate={score => handleVote(song.id, score)}
+                    disabled={voting}
+                    size={16}
+                  />
+                )}
+              </SongList.Action>
+            </SongList.Row>
           ))}
-        </div>
+        </SongList>
       </div>
     </div>
   )
+}
+
+function SkeletonText({ width = '80%', height = 14 }) {
+  return <Skeleton width={width} height={height} />
 }

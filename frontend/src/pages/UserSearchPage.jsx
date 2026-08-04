@@ -1,6 +1,11 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { userApi } from '../services/api'
+import { PrimaryButton } from '../components/ui/Button'
+import Avatar from '../components/ui/Avatar'
+import PageHeader from '../components/ui/PageHeader'
+import EmptyState from '../components/ui/EmptyState'
+import Icon from '../components/ui/Icon'
 
 export default function UserSearchPage() {
   const [query, setQuery] = useState('')
@@ -25,88 +30,43 @@ export default function UserSearchPage() {
 
   return (
     <div className="fade-in">
-      <h1 style={{
-        fontSize: 28,
-        fontWeight: 800,
-        marginBottom: 8,
-        letterSpacing: '-.02em'
-      }}>
-        Usuarios
-      </h1>
-      <p style={{ color: 'var(--text-dim)', fontSize: 14, marginBottom: 28, maxWidth: 460 }}>
-        Encontra usuarios y mira sus canciones votadas
-      </p>
+      <PageHeader
+        eyebrow="Comunidad"
+        title="Usuarios"
+        description="Encontra usuarios y mira sus canciones votadas"
+      />
 
-      <form onSubmit={handleSearch} style={{
-        maxWidth: 460,
-        marginBottom: 28,
-        display: 'flex',
-        gap: 8
-      }}>
+      <form onSubmit={handleSearch} style={{ maxWidth: 460, marginBottom: 'var(--space-5)', display: 'flex', gap: 'var(--space-2)' }}>
         <input
           value={query}
           onChange={e => setQuery(e.target.value)}
           placeholder="Buscar por nombre de usuario..."
+          aria-label="Buscar usuarios"
         />
-        <button
-          type="submit"
-          className="btn btn-primary"
-          disabled={searching || !query.trim()}
-          style={{ whiteSpace: 'nowrap' }}
-        >
+        <PrimaryButton type="submit" disabled={searching || !query.trim()} style={{ whiteSpace: 'nowrap' }}>
           {searching ? 'Buscando...' : 'Buscar'}
-        </button>
+        </PrimaryButton>
       </form>
 
       {searched && !searching && users.length === 0 && (
-        <div className="card" style={{
-          textAlign: 'center',
-          padding: 36,
-          maxWidth: 460
-        }}>
-          <p style={{ color: 'var(--text-dim)' }}>No se encontraron usuarios</p>
-        </div>
+        <EmptyState
+          icon="search"
+          title="No se encontraron usuarios"
+          description={`No hay resultados para "${query}".`}
+          style={{ maxWidth: 460 }}
+        />
       )}
 
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 6,
-        maxWidth: 460
-      }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxWidth: 460 }}>
         {users.map(u => (
-          <Link
-            key={u.id}
-            to={`/users/${u.id}`}
-            style={{ textDecoration: 'none' }}
-          >
-            <div className="card card-hover" style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 14,
-              padding: '14px 18px'
-            }}>
-              <div style={{
-                width: 42,
-                height: 42,
-                borderRadius: '50%',
-                background: 'linear-gradient(180deg, #7cc4dc, #6eb8d0)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: 700,
-                fontSize: 16,
-                color: '#08080a',
-                flexShrink: 0,
-                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.2)'
-              }}>
-                {u.username.charAt(0).toUpperCase()}
-              </div>
+          <Link key={u.id} to={`/users/${u.username}`} style={{ textDecoration: 'none' }}>
+            <div className="card card-hover" style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 18px' }}>
+              <Avatar username={u.username} size={42} />
               <div style={{ minWidth: 0 }}>
-                <div style={{ fontWeight: 500, fontSize: 15, color: 'var(--text)' }}>
+                <div style={{ fontWeight: 600, fontSize: 15, color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}>
                   {u.username}
                 </div>
-                <div style={{ fontSize: 13, color: 'var(--text-dim)' }}>
+                <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
                   {u.email}
                 </div>
               </div>

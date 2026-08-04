@@ -29,8 +29,17 @@ public class UserService {
     public UserProfileResponse getUserProfile(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+        return buildProfile(user);
+    }
 
-        List<Vote> votes = voteRepository.findByUserId(userId);
+    public UserProfileResponse getUserProfileByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return buildProfile(user);
+    }
+
+    private UserProfileResponse buildProfile(User user) {
+        List<Vote> votes = voteRepository.findByUserId(user.getId());
 
         UserProfileResponse response = new UserProfileResponse();
         response.setId(user.getId());
@@ -45,6 +54,7 @@ public class UserService {
             vdr.setFeaturedArtists(vote.getSong().getFeaturedArtists());
             vdr.setAlbumName(vote.getSong().getAlbum().getName());
             vdr.setSpotifyTrackId(vote.getSong().getSpotifyTrackId());
+            vdr.setScore(vote.getScore());
             vdr.setVotedAt(vote.getCreatedAt().toString());
             voteDetails.add(vdr);
         }

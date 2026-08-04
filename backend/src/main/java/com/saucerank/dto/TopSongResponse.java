@@ -8,11 +8,12 @@ public class TopSongResponse {
     private Integer albumYear;
     private String spotifyTrackId;
     private long voteCount;
+    private double averageScore;
     private int rank;
 
     public TopSongResponse(Long songId, String title, String featuredArtists,
                            String albumName, Integer albumYear, String spotifyTrackId,
-                           long voteCount, int rank) {
+                           long voteCount, double averageScore, int rank) {
         this.songId = songId;
         this.title = title;
         this.featuredArtists = featuredArtists;
@@ -20,6 +21,7 @@ public class TopSongResponse {
         this.albumYear = albumYear;
         this.spotifyTrackId = spotifyTrackId;
         this.voteCount = voteCount;
+        this.averageScore = averageScore;
         this.rank = rank;
     }
 
@@ -37,6 +39,8 @@ public class TopSongResponse {
     public void setSpotifyTrackId(String spotifyTrackId) { this.spotifyTrackId = spotifyTrackId; }
     public long getVoteCount() { return voteCount; }
     public void setVoteCount(long voteCount) { this.voteCount = voteCount; }
+    public double getAverageScore() { return averageScore; }
+    public void setAverageScore(double averageScore) { this.averageScore = averageScore; }
     public int getRank() { return rank; }
     public void setRank(int rank) { this.rank = rank; }
 }

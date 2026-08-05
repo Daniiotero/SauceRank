@@ -67,3 +67,35 @@ SauceRank/
 ├── docker-compose.yml   # Orquestacion de servicios
 └── README.md
 ```
+
+## Tests
+
+Los tests deben pasar antes de cada commit.
+
+### Frontend (Vitest + Testing Library)
+
+```bash
+cd frontend
+npm test
+```
+
+Los ficheros de test viven junto al codigo que prueban
+(`*.test.jsx` en `src/`). La configuracion esta en
+`vite.config.js` (entorno `jsdom`) y el setup en
+`src/test/setup.js`.
+
+### Backend (JUnit 5 + Mockito)
+
+Requisito: tener `JAVA_HOME` apuntando a un JDK (Java 21+).
+
+```bash
+cd backend
+# Windows
+.\mvnw.cmd test
+# Linux / macOS
+./mvnw test
+```
+
+Los tests estan en `backend/src/test/java/`. Usan mocks de los
+repositorios, asi que no requieren base de datos ni levantar el
+servidor.

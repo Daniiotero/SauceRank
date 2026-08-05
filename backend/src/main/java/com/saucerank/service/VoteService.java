@@ -1,12 +1,14 @@
 package com.saucerank.service;
 
 import com.saucerank.dto.TopSongResponse;
+import com.saucerank.errors.ApiException;
 import com.saucerank.model.Song;
 import com.saucerank.model.User;
 import com.saucerank.model.Vote;
 import com.saucerank.repository.SongRepository;
 import com.saucerank.repository.UserRepository;
 import com.saucerank.repository.VoteRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +18,9 @@ import java.util.Optional;
 
 @Service
 public class VoteService {
+
+    private static final int MIN_SCORE = 1;
+    private static final int MAX_SCORE = 10;
 
     private final VoteRepository voteRepository;
     private final SongRepository songRepository;
@@ -30,6 +35,12 @@ public class VoteService {
 
     @Transactional
     public void vote(Long userId, Long songId, int score) {
+        requirePositiveId(userId, "userId");
+        requirePositiveId(songId, "songId");
+        if (score < MIN_SCORE || score > MAX_SCORE) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "El puntaje debe estar entre 1 y 10");
+        }
+
         Optional<Vote> existing = voteRepository.findByUserIdAndSongId(userId, songId);
         if (existing.isPresent()) {
             Vote vote = existing.get();
@@ -39,26 +50,38 @@ public class VoteService {
         }
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "User not found"));
         Song song = songRepository.findById(songId)
-                .orElseThrow(() -> new RuntimeException("Song not found"));
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Song not found"));
 
         voteRepository.save(new Vote(user, song, score));
     }
 
     @Transactional
     public void unvote(Long userId, Long songId) {
+        requirePositiveId(userId, "userId");
+        requirePositiveId(songId, "songId");
         voteRepository.deleteByUserIdAndSongId(userId, songId);
     }
 
     public boolean hasVoted(Long userId, Long songId) {
+        requirePositiveId(userId, "userId");
+        requirePositiveId(songId, "songId");
         return voteRepository.existsByUserIdAndSongId(userId, songId);
     }
 
     public int getUserScore(Long userId, Long songId) {
+        requirePositiveId(userId, "userId");
+        requirePositiveId(songId, "songId");
         return voteRepository.findByUserIdAndSongId(userId, songId)
                 .map(Vote::getScore)
                 .orElse(0);
+    }
+
+    private void requirePositiveId(Long id, String name) {
+        if (id == null || id <= 0) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, name + " inválido");
+        }
     }
 
     public List<TopSongResponse> getTopSongs(int limit) {

@@ -2,6 +2,7 @@ package com.saucerank.service;
 
 import com.saucerank.dto.UserProfileResponse;
 import com.saucerank.dto.VoteDetailResponse;
+import com.saucerank.errors.ApiException;
 import com.saucerank.model.Album;
 import com.saucerank.model.Song;
 import com.saucerank.model.User;
@@ -22,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -101,11 +103,36 @@ class UserServiceTest {
 
     @Test
     void searchUsersDelegaEnElRepositorio() {
-        when(userRepository.findByUsernameContainingIgnoreCase("sau")).thenReturn(List.of(user()));
+        when(userRepository.searchByUsername("sau")).thenReturn(List.of(user()));
 
         List<User> users = userService.searchUsers("sau");
 
         assertEquals(1, users.size());
         assertEquals("sauce", users.get(0).getUsername());
+        verify(userRepository).searchByUsername("sau");
+    }
+
+    @Test
+    void searchUsersRecortaLaQuery() {
+        when(userRepository.searchByUsername("sau")).thenReturn(List.of());
+
+        userService.searchUsers("  sau  ");
+
+        verify(userRepository).searchByUsername("sau");
+    }
+
+    @Test
+    void searchUsersEscapaLosComodinesDelLike() {
+        when(userRepository.searchByUsername("\\%sau\\_\\\\")).thenReturn(List.of());
+
+        userService.searchUsers("%sau_\\");
+
+        verify(userRepository).searchByUsername("\\%sau\\_\\\\");
+    }
+
+    @Test
+    void searchUsersRechazaQueryVacia() {
+        assertThrows(ApiException.class, () -> userService.searchUsers("   "));
+        assertThrows(ApiException.class, () -> userService.searchUsers(null));
     }
 }

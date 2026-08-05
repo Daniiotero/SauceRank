@@ -19,8 +19,30 @@ spring:
   sql:
     init:
       mode: always
+  mail:
+    host: ${SMTP_HOST:}
+    port: ${SMTP_PORT:587}
+    username: ${SMTP_USERNAME:}
+    password: ${SMTP_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 app:
   jwt:
     secret: "SauceRankSecretKey2024EladioCarrionSuperSecureJWTKey123456789"
     expiration-ms: 86400000
+  security:
+    pwned-passwords:
+      enabled: true
+      timeout-ms: 3000
+    rate-limit:
+      max-per-window: 10
+      window-minutes: 15
+  mail:
+    enabled: ${MAIL_ENABLED:false}
+    from: ${MAIL_FROM:noreply@saucerank.com}
+  frontend-url: ${FRONTEND_URL:http://localhost:5173}

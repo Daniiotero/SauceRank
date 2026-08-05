@@ -57,12 +57,21 @@ describe('AuthContext', () => {
     expect(JSON.parse(localStorage.getItem('user'))).toEqual({ id: 1, username: 'sauce' })
   })
 
-  test('register guarda el token y el usuario', async () => {
-    authApi.register.mockResolvedValue({ data: userData })
+  test('register devuelve el mensaje sin iniciar sesion', async () => {
+    authApi.register.mockResolvedValue({ data: { message: 'Revisa tu correo' } })
     renderWithProvider()
     fireEvent.click(screen.getByText('register'))
-    await waitFor(() => expect(screen.getByTestId('username')).toHaveTextContent('sauce'))
-    expect(localStorage.getItem('token')).toBe('tok-123')
+    await waitFor(() => expect(screen.getByTestId('username')).toHaveTextContent('anon'))
+    expect(localStorage.getItem('token')).toBeNull()
+    expect(localStorage.getItem('user')).toBeNull()
+  })
+
+  test('register lanza error si la API falla', async () => {
+    authApi.register.mockRejectedValue(new Error('falla'))
+    renderWithProvider()
+    fireEvent.click(screen.getByText('register'))
+    await waitFor(() => expect(screen.getByTestId('username')).toHaveTextContent('anon'))
+    expect(localStorage.getItem('token')).toBeNull()
   })
 
   test('login lanza error si la respuesta no trae token', async () => {
@@ -73,10 +82,10 @@ describe('AuthContext', () => {
     expect(localStorage.getItem('token')).toBeNull()
   })
 
-  test('register lanza error si la respuesta no trae token', async () => {
-    authApi.register.mockResolvedValue({ data: null })
+  test('login lanza error si la API falla', async () => {
+    authApi.login.mockRejectedValue(new Error('falla'))
     renderWithProvider()
-    fireEvent.click(screen.getByText('register'))
+    fireEvent.click(screen.getByText('login'))
     await waitFor(() => expect(screen.getByTestId('username')).toHaveTextContent('anon'))
     expect(localStorage.getItem('token')).toBeNull()
   })

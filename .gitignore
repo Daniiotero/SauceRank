@@ -10,3 +10,5 @@ target/
 .idea/
 *.iml
 .vscode/
+.env
+application-local.yml

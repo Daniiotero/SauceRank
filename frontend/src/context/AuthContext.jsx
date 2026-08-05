@@ -36,14 +36,7 @@ export function AuthProvider({ children }) {
 
   const register = async (username, email, password) => {
     const res = await authApi.register({ username, email, password })
-    const data = res.data
-    if (!data || !data.token) {
-      throw new Error('Respuesta invalida del servidor')
-    }
-    localStorage.setItem('token', data.token)
-    localStorage.setItem('user', JSON.stringify({ id: data.userId, username: data.username }))
-    setUser({ id: data.userId, username: data.username })
-    return data
+    return res.data
   }
 
   const logout = () => {

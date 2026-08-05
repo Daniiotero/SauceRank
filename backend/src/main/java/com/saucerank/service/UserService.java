@@ -2,10 +2,12 @@ package com.saucerank.service;
 
 import com.saucerank.dto.UserProfileResponse;
 import com.saucerank.dto.VoteDetailResponse;
+import com.saucerank.errors.ApiException;
 import com.saucerank.model.User;
 import com.saucerank.model.Vote;
 import com.saucerank.repository.UserRepository;
 import com.saucerank.repository.VoteRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,6 +15,8 @@ import java.util.List;
 
 @Service
 public class UserService {
+
+    private static final int MAX_SEARCH_LENGTH = 50;
 
     private final UserRepository userRepository;
     private final VoteRepository voteRepository;
@@ -23,18 +27,35 @@ public class UserService {
     }
 
     public List<User> searchUsers(String query) {
-        return userRepository.findByUsernameContainingIgnoreCase(query);
+        if (query == null || query.isBlank()) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "El término de búsqueda no puede estar vacío");
+        }
+        String trimmed = query.trim();
+        if (trimmed.length() > MAX_SEARCH_LENGTH) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "El término de búsqueda es demasiado largo");
+        }
+        String escaped = trimmed
+                .replace("\\", "\\\\")
+                .replace("%", "\\%")
+                .replace("_", "\\_");
+        return userRepository.searchByUsername(escaped);
     }
 
     public UserProfileResponse getUserProfile(Long userId) {
+        if (userId == null || userId <= 0) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Id de usuario inválido");
+        }
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "User not found"));
         return buildProfile(user);
     }
 
     public UserProfileResponse getUserProfileByUsername(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (username == null || username.isBlank()) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "El nombre de usuario es requerido");
+        }
+        User user = userRepository.findByUsername(username.trim())
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "User not found"));
         return buildProfile(user);
     }
 

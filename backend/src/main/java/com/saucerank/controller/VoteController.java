@@ -22,13 +22,9 @@ public class VoteController {
 
     @PostMapping
     public ResponseEntity<?> vote(@Valid @RequestBody VoteRequest request, Authentication auth) {
-        try {
-            Long userId = (Long) auth.getPrincipal();
-            voteService.vote(userId, request.getSongId(), request.getScore());
-            return ResponseEntity.ok().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        Long userId = (Long) auth.getPrincipal();
+        voteService.vote(userId, request.getSongId(), request.getScore());
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{songId}")

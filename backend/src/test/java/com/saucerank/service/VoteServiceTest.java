@@ -1,6 +1,7 @@
 package com.saucerank.service;
 
 import com.saucerank.dto.TopSongResponse;
+import com.saucerank.errors.ApiException;
 import com.saucerank.model.Album;
 import com.saucerank.model.Song;
 import com.saucerank.model.User;
@@ -105,6 +106,24 @@ class VoteServiceTest {
 
         assertTrue(voteService.hasVoted(1L, 2L));
         assertFalse(voteService.hasVoted(1L, 3L));
+    }
+
+    @Test
+    void voteRechazaScoreFueraDeRango() {
+        assertThrows(ApiException.class, () -> voteService.vote(1L, 2L, 0));
+        assertThrows(ApiException.class, () -> voteService.vote(1L, 2L, 11));
+    }
+
+    @Test
+    void voteRechazaIdsInvalidos() {
+        assertThrows(ApiException.class, () -> voteService.vote(null, 2L, 5));
+        assertThrows(ApiException.class, () -> voteService.vote(1L, -3L, 5));
+        assertThrows(ApiException.class, () -> voteService.vote(0L, 2L, 5));
+    }
+
+    @Test
+    void unvoteRechazaSongIdInvalido() {
+        assertThrows(ApiException.class, () -> voteService.unvote(1L, -1L));
     }
 
     @Test

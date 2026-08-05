@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { PrimaryButton } from '../components/ui/Button'
+import PasswordInput from '../components/ui/PasswordInput'
 
 export default function LoginPage() {
   const [username, setUsername] = useState('')
@@ -67,8 +68,7 @@ export default function LoginPage() {
             <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)' }}>
               Contrasena
             </label>
-            <input
-              type="password"
+            <PasswordInput
               value={password}
               onChange={e => setPassword(e.target.value)}
               placeholder="··········"

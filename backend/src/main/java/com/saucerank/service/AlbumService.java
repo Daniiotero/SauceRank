@@ -2,12 +2,14 @@ package com.saucerank.service;
 
 import com.saucerank.dto.AlbumResponse;
 import com.saucerank.dto.SongResponse;
+import com.saucerank.errors.ApiException;
 import com.saucerank.model.Album;
 import com.saucerank.model.Song;
 import com.saucerank.model.Vote;
 import com.saucerank.repository.AlbumRepository;
 import com.saucerank.repository.SongRepository;
 import com.saucerank.repository.VoteRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -34,8 +36,12 @@ public class AlbumService {
     }
 
     public AlbumResponse getAlbum(Long albumId, Long currentUserId) {
+        if (albumId == null || albumId <= 0) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Id de album inválido");
+        }
+
         Album album = albumRepository.findById(albumId)
-                .orElseThrow(() -> new RuntimeException("Album not found"));
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Album not found"));
 
         List<Song> songs = songRepository.findByAlbumIdOrderByTrackNumber(albumId);
 

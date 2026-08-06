@@ -206,3 +206,80 @@ app:
 Si la API no responde (timeout o error), el registro **falla abierto**
 (se permite) y se registra un warning en el log, para no bloquear a
 usuarios por un problema de disponibilidad externo.
+
+## Despliegue en producción (gratis)
+
+SauceRank está pensado para desplegarse en la nube sin Docker local.
+La arquitectura usa **Render** (frontend + backend) y **Neon** (base de
+datos PostgreSQL), todo en el tier gratuito.
+
+### Arquitectura
+
+| Pieza     | Servicio            | Coste | Notas                                   |
+|-----------|---------------------|-------|-----------------------------------------|
+| Frontend  | Render Static Site  | Gratis| CDN, nunca se duerme                     |
+| Backend   | Render Web Service  | Gratis| Se duerme a los 15 min sin tráfico      |
+| Base datos| Neon PostgreSQL     | Gratis| Free tier sin expiración                |
+
+### 1. Base de datos (Neon)
+
+1. Regístrate en <https://neon.tech>.
+2. Crea un proyecto nuevo, nombre `SauceRank`, versión **PostgreSQL 16**,
+   región cercana a tus usuarios.
+3. Copia la **connection string** (formato
+   `postgresql://user:pass@host/dbname?sslmode=require`).
+
+> La conexión de Neon requiere SSL. Spring Boot la activa añadiendo
+> `?sslmode=require` a la URL JDBC.
+
+### 2. Backend (Render Web Service)
+
+1. En <https://render.com>, crea una **Web Service** conectada al repo de
+   GitHub (`Daniiotero/SauceRank`).
+2. **Root Directory**: `backend` (usa el `Dockerfile` ya existente).
+3. Variables de entorno:
+
+| Variable                   | Valor                                              |
+|----------------------------|----------------------------------------------------|
+| `SPRING_DATASOURCE_URL`    | `jdbc:postgresql://<host>:5432/<db>?sslmode=require` |
+| `SPRING_DATASOURCE_USERNAME`| usuario de Neon                                   |
+| `SPRING_DATASOURCE_PASSWORD`| contraseña de Neon                                |
+| `JWT_SECRET`               | secreto largo y aleatorio (ver abajo)             |
+| `FRONTEND_URL`             | `https://<tu-frontend>.onrender.com`              |
+| `CORS_ALLOWED_ORIGINS`     | `https://<tu-frontend>.onrender.com`              |
+| `MAIL_ENABLED`             | `false` (o `true` con `SMTP_*`)                   |
+
+> Genera un `JWT_SECRET` seguro con: `node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"`
+
+### 3. Frontend (Render Static Site)
+
+1. Crea una **Static Site** conectada al mismo repo.
+2. **Root Directory**: `frontend`.
+3. **Build Command**: `npm ci && npm run build`.
+4. **Publish Directory**: `dist`.
+5. Variable de entorno: `VITE_API_URL=https://<tu-backend>.onrender.com`.
+6. En **Settings > Redirects/Rewrites** añade una **rewrite**:
+   - Source: `/*`
+   - Destination: `/index.html`
+
+Esto es obligatorio para que las rutas de React Router funcionen al
+recargar la página.
+
+### Despliegue local sin Docker
+
+Si no quieres usar Docker en local, necesitas PostgreSQL instalado y
+ejecutado de forma nativa, luego:
+
+```bash
+# Backend (Java 21+)
+cd backend
+./mvnw spring-boot:run
+
+# Frontend (Node 20+)
+cd frontend
+npm install
+npm run dev
+```
+
+El frontend en dev usa el proxy de Vite a `http://localhost:8080`, y la
+base de datos nativa debe escuchar en `localhost:5432`.

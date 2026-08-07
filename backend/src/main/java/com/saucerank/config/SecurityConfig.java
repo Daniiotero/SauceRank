@@ -43,6 +43,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/health").permitAll()
                 .requestMatchers("/api/albums/**").permitAll()
                 .requestMatchers("/api/votes/top").permitAll()
                 .requestMatchers("/api/check-token").authenticated()

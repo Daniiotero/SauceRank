@@ -1,0 +1,16 @@
+name: Keep servers awake
+
+on:
+  schedule:
+    - cron: '*/14 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    name: Ping Render services
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping backend
+        run: curl -fsS https://saucerankbackend.onrender.com/api/health
+      - name: Ping frontend
+        run: curl -fsS -o /dev/null https://saucerank.onrender.com/

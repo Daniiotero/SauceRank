@@ -6,7 +6,7 @@ public class UserProfileResponse {
     private Long id;
     private String username;
     private String email;
-    private List<VoteDetailResponse> votes;
+    private List<UserAlbumResponse> albums;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -14,6 +14,6 @@ public class UserProfileResponse {
     public void setUsername(String username) { this.username = username; }
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
-    public List<VoteDetailResponse> getVotes() { return votes; }
-    public void setVotes(List<VoteDetailResponse> votes) { this.votes = votes; }
+    public List<UserAlbumResponse> getAlbums() { return albums; }
+    public void setAlbums(List<UserAlbumResponse> albums) { this.albums = albums; }
 }

@@ -1,9 +1,11 @@
 package com.saucerank.service;
 
+import com.saucerank.dto.UserAlbumResponse;
 import com.saucerank.dto.UserProfileResponse;
 import com.saucerank.dto.UserSummaryResponse;
 import com.saucerank.dto.VoteDetailResponse;
 import com.saucerank.errors.ApiException;
+import com.saucerank.model.Album;
 import com.saucerank.model.User;
 import com.saucerank.model.Vote;
 import com.saucerank.repository.UserRepository;
@@ -12,7 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserService {
@@ -78,19 +83,37 @@ public class UserService {
             response.setEmail(user.getEmail());
         }
 
-        List<VoteDetailResponse> voteDetails = new ArrayList<>();
+        Map<Long, UserAlbumResponse> albumsById = new LinkedHashMap<>();
         for (Vote vote : votes) {
+            Album album = vote.getSong().getAlbum();
+            UserAlbumResponse albumRes = albumsById.computeIfAbsent(album.getId(), id -> {
+                UserAlbumResponse uar = new UserAlbumResponse();
+                uar.setAlbumId(album.getId());
+                uar.setAlbumName(album.getName());
+                uar.setAlbumYear(album.getYear());
+                uar.setCoverUrl(album.getCoverUrl());
+                uar.setSongs(new ArrayList<>());
+                return uar;
+            });
+
             VoteDetailResponse vdr = new VoteDetailResponse();
             vdr.setSongId(vote.getSong().getId());
             vdr.setTitle(vote.getSong().getTitle());
             vdr.setFeaturedArtists(vote.getSong().getFeaturedArtists());
-            vdr.setAlbumName(vote.getSong().getAlbum().getName());
+            vdr.setAlbumName(album.getName());
             vdr.setSpotifyTrackId(vote.getSong().getSpotifyTrackId());
+            vdr.setTrackNumber(vote.getSong().getTrackNumber());
             vdr.setScore(vote.getScore());
             vdr.setVotedAt(vote.getCreatedAt().toString());
-            voteDetails.add(vdr);
+            albumRes.getSongs().add(vdr);
         }
-        response.setVotes(voteDetails);
+
+        List<UserAlbumResponse> albums = new ArrayList<>(albumsById.values());
+        albums.sort(Comparator.comparingInt((UserAlbumResponse a) -> a.getAlbumYear()).reversed());
+        for (UserAlbumResponse uar : albums) {
+            uar.getSongs().sort(Comparator.comparingInt(VoteDetailResponse::getTrackNumber));
+        }
+        response.setAlbums(albums);
         return response;
     }
 }

@@ -34,7 +34,18 @@ export default function AlbumPage() {
     setVoting(true)
     try {
       await voteApi.vote(songId, score)
-      loadAlbum()
+      setAlbum(prev => prev ? {
+        ...prev,
+        songs: prev.songs.map(song => {
+          if (song.id !== songId) return song
+          return {
+            ...song,
+            votedByCurrentUser: true,
+            userScore: score,
+            voteCount: song.votedByCurrentUser ? song.voteCount : song.voteCount + 1,
+          }
+        }),
+      } : prev)
     } catch (err) {
       alert('Error al votar')
     } finally {

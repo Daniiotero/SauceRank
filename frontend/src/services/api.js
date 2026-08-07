@@ -20,7 +20,7 @@ api.interceptors.response.use(
         !error.config.url?.startsWith('/auth/')) {
       localStorage.removeItem('token')
       localStorage.removeItem('user')
-      window.location.href = '/login'
+      window.dispatchEvent(new CustomEvent('auth:expired'))
     }
     return Promise.reject(error)
   }

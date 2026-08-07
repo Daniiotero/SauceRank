@@ -118,6 +118,35 @@ class AlbumServiceTest {
     }
 
     @Test
+    void getAlbumCalculaLaMediaYTotalesDelAlbum() {
+        when(albumRepository.findById(1L)).thenReturn(Optional.of(album(1L)));
+        when(songRepository.findByAlbumIdOrderByTrackNumber(1L)).thenReturn(List.of(song(10L, "Kemba Walker")));
+        when(voteRepository.findVoteCountsByAlbumId(1L)).thenReturn(List.of());
+
+        List<Object[]> aggregate = new ArrayList<>();
+        aggregate.add(new Object[]{12L, 8.75});
+        when(voteRepository.findAlbumAggregate(1L)).thenReturn(aggregate);
+
+        AlbumResponse response = albumService.getAlbum(1L, null);
+
+        assertEquals(12L, response.getVoteCount());
+        assertEquals(8.75, response.getAverageScore(), 0.001);
+    }
+
+    @Test
+    void getAlbumSinVotosPoneMediaYCero() {
+        when(albumRepository.findById(1L)).thenReturn(Optional.of(album(1L)));
+        when(songRepository.findByAlbumIdOrderByTrackNumber(1L)).thenReturn(List.of(song(10L, "Kemba Walker")));
+        when(voteRepository.findVoteCountsByAlbumId(1L)).thenReturn(List.of());
+        when(voteRepository.findAlbumAggregate(1L)).thenReturn(List.of());
+
+        AlbumResponse response = albumService.getAlbum(1L, null);
+
+        assertEquals(0L, response.getVoteCount());
+        assertEquals(0.0, response.getAverageScore(), 0.001);
+    }
+
+    @Test
     void getAllAlbumsDevuelveOrdenadosPorAnioDesc() {
         Album a2020 = album(1L);
         Album a2018 = new Album("SAUCE BOYFRIEND", 2018, null, "ALBUM");

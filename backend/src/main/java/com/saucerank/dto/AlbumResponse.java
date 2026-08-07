@@ -10,6 +10,8 @@ public class AlbumResponse {
     private String type;
     private String spotifyPlaylistId;
     private List<SongResponse> songs;
+    private Long voteCount;
+    private double averageScore;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -25,4 +27,8 @@ public class AlbumResponse {
     public void setSpotifyPlaylistId(String spotifyPlaylistId) { this.spotifyPlaylistId = spotifyPlaylistId; }
     public List<SongResponse> getSongs() { return songs; }
     public void setSongs(List<SongResponse> songs) { this.songs = songs; }
+    public Long getVoteCount() { return voteCount; }
+    public void setVoteCount(Long voteCount) { this.voteCount = voteCount; }
+    public double getAverageScore() { return averageScore; }
+    public void setAverageScore(double averageScore) { this.averageScore = averageScore; }
 }

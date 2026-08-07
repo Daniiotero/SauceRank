@@ -132,6 +132,18 @@ export default function AlbumPage() {
             <span style={{ width: 3, height: 3, borderRadius: '50%', background: 'var(--text-muted)' }} />
             <span>{album.songs.length} canciones</span>
           </div>
+          {album.voteCount > 0 && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 'var(--space-3)', fontSize: 14 }}>
+              <span className="vote-avg" style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+                <Icon name="star" size={16} style={{ color: 'var(--accent-bright)' }} />
+                {album.averageScore.toFixed(1)}
+              </span>
+              <span style={{ color: 'var(--text-muted)' }}>·</span>
+              <span style={{ color: 'var(--text-secondary)' }}>
+                {album.voteCount} voto{album.voteCount !== 1 ? 's' : ''}
+              </span>
+            </div>
+          )}
           {!user && (
             <p style={{ marginTop: 'var(--space-4)', fontSize: 13, color: 'var(--text-secondary)' }}>
               <PrimaryButton to="/login" size="sm" style={{ marginRight: 8 }}>Inicia sesión</PrimaryButton>

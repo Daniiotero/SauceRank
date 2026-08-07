@@ -51,6 +51,14 @@ public class AlbumService {
             voteCounts.put((Long) row[0], (Long) row[1]);
         }
 
+        List<Object[]> aggregate = voteRepository.findAlbumAggregate(albumId);
+        long totalVotes = 0L;
+        double averageScore = 0.0;
+        if (!aggregate.isEmpty() && aggregate.get(0) != null && aggregate.get(0)[0] != null) {
+            totalVotes = (Long) aggregate.get(0)[0];
+            averageScore = aggregate.get(0)[1] != null ? ((Number) aggregate.get(0)[1]).doubleValue() : 0.0;
+        }
+
         AlbumResponse response = new AlbumResponse();
         response.setId(album.getId());
         response.setName(album.getName());
@@ -58,6 +66,8 @@ public class AlbumService {
         response.setCoverUrl(album.getCoverUrl());
         response.setType(album.getType());
         response.setSpotifyPlaylistId(album.getSpotifyPlaylistId());
+        response.setVoteCount(totalVotes);
+        response.setAverageScore(averageScore);
 
         List<SongResponse> songResponses = new ArrayList<>();
         for (Song song : songs) {

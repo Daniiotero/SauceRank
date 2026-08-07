@@ -34,7 +34,7 @@ export default function VotePopover({ score = 0, onRate, disabled }) {
         >
           <Icon name="star" size={15} />
         </button>
-        {score > 0 && <span className="vote-mobile-score">{score}</span>}
+        <span className="vote-mobile-score">{score > 0 ? score : '\u00A0'}</span>
       </div>
 
       {open &&

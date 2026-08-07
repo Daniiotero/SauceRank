@@ -30,7 +30,7 @@ export default function StarRating({ score = 0, onRate, disabled, size = 18 }) {
         )
       })}
       <span className="star-score" aria-live="polite">
-        {score}/10
+        {score}
       </span>
     </div>
   )

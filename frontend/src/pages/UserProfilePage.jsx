@@ -99,9 +99,9 @@ export default function UserProfilePage() {
                   ].filter(Boolean).join(' · ')}
                 />
                 <SongList.Action>
-                  <span className="vote-avg" title={`Puntuación de ${(v.score ?? 0)}/10`}>
+                  <span className="vote-avg" title={`Puntuación de ${v.score ?? 0}`}>
                     <Icon name="star" size={13} />
-                    {v.score ?? 0}/10
+                    {v.score ?? 0}
                   </span>
                 </SongList.Action>
               </SongList.Row>

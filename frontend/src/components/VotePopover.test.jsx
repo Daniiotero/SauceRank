@@ -1,5 +1,5 @@
 import { describe, test, expect, vi } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, within } from '@testing-library/react'
 import VotePopover from './VotePopover'
 
 describe('VotePopover', () => {
@@ -12,7 +12,7 @@ describe('VotePopover', () => {
     render(<VotePopover score={5} />)
     fireEvent.click(screen.getByRole('button', { name: /Cambiar voto/ }))
     expect(screen.getByRole('dialog')).toBeInTheDocument()
-    expect(screen.getByText('5/10')).toBeInTheDocument()
+    expect(within(screen.getByRole('dialog')).getByText('5')).toBeInTheDocument()
   })
 
   test('vota y cierra el modal', () => {

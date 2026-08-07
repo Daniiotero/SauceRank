@@ -10,7 +10,7 @@ describe('StarRating', () => {
 
   test('muestra el puntaje actual', () => {
     render(<StarRating score={7} />)
-    expect(screen.getByText('7/10')).toBeInTheDocument()
+    expect(screen.getByText('7')).toBeInTheDocument()
   })
 
   test('marca como seleccionadas las estrellas hasta el puntaje', () => {

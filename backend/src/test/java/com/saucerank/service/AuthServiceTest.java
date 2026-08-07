@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
 
-    private static final String NEUTRAL_REGISTER_MESSAGE = "Revisa tu correo para activar tu cuenta";
+    private static final String NEUTRAL_REGISTER_MESSAGE = "Cuenta creada correctamente";
 
     @Mock
     private UserRepository userRepository;
@@ -44,9 +44,6 @@ class AuthServiceTest {
 
     @Mock
     private BreachedPasswordService breachedPasswordService;
-
-    @Mock
-    private EmailVerificationService emailVerificationService;
 
     @Mock
     private LoginAttemptService loginAttemptService;
@@ -72,7 +69,6 @@ class AuthServiceTest {
     private User verifiedUser(long id, String username, String passwordHash) {
         User user = new User(username, username + "@example.com", passwordHash);
         user.setId(id);
-        user.setEnabled(true);
         return user;
     }
 
@@ -86,7 +82,7 @@ class AuthServiceTest {
     }
 
     @Test
-    void registerCreaUsuarioInactivoYEnviaVerificacion() {
+    void registerCreaUsuarioYNoGeneraToken() {
         stubSuccessfulRegistration();
 
         MessageResponse response = authService.register(registerRequest("sauce", "sauce@example.com", "secret12"));
@@ -94,8 +90,7 @@ class AuthServiceTest {
         assertEquals(NEUTRAL_REGISTER_MESSAGE, response.getMessage());
         ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
         verify(userRepository).save(captor.capture());
-        assertTrue(captor.getValue().isEnabled() == false, "El usuario debe crearse inactivo");
-        verify(emailVerificationService).createAndSendVerification(any(User.class));
+        assertEquals("sauce", captor.getValue().getUsername());
         verify(jwtUtil, never()).generateToken(any(), any());
     }
 
@@ -107,7 +102,6 @@ class AuthServiceTest {
 
         assertEquals(NEUTRAL_REGISTER_MESSAGE, response.getMessage());
         verify(userRepository, never()).save(any());
-        verify(emailVerificationService, never()).createAndSendVerification(any());
     }
 
     @Test
@@ -119,7 +113,6 @@ class AuthServiceTest {
 
         assertEquals(NEUTRAL_REGISTER_MESSAGE, response.getMessage());
         verify(userRepository, never()).save(any());
-        verify(emailVerificationService, never()).createAndSendVerification(any());
     }
 
     @Test
@@ -198,18 +191,6 @@ class AuthServiceTest {
     }
 
     @Test
-    void loginLanzaSiLaCuentaNoEstaActivada() {
-        User user = new User("sauce", "sauce@example.com", "hashed");
-        user.setId(1L);
-        when(userRepository.findByUsername("sauce")).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches("secret1", "hashed")).thenReturn(true);
-
-        ApiException ex = assertThrows(ApiException.class,
-                () -> authService.login(loginRequest("sauce", "secret1")));
-        assertEquals("Usuario o contraseña incorrectos", ex.getMessage());
-    }
-
-    @Test
     void loginLanzaSiElUsuarioNoExiste() {
         when(userRepository.findByUsername("sauce")).thenReturn(Optional.empty());
 
@@ -224,23 +205,11 @@ class AuthServiceTest {
     void loginRegistraFalloCuandoLaPasswordEsIncorrecta() {
         User user = new User("sauce", "sauce@example.com", "hashed");
         user.setId(1L);
-        user.setEnabled(true);
         when(userRepository.findByUsername("sauce")).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("wrong", "hashed")).thenReturn(false);
 
         assertThrows(ApiException.class, () -> authService.login(loginRequest("sauce", "wrong")));
         verify(loginAttemptService).registerFailure("sauce", "sauce@example.com");
-    }
-
-    @Test
-    void loginNoCuentaElFalloSiSoloFaltaVerificarLaCuenta() {
-        User user = new User("sauce", "sauce@example.com", "hashed");
-        user.setId(1L);
-        when(userRepository.findByUsername("sauce")).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches("secret1", "hashed")).thenReturn(true);
-
-        assertThrows(ApiException.class, () -> authService.login(loginRequest("sauce", "secret1")));
-        verify(loginAttemptService, never()).registerFailure(any(), any());
     }
 
     @Test

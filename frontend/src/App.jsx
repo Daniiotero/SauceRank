@@ -6,7 +6,6 @@ import AlbumPage from './pages/AlbumPage'
 import TopChartPage from './pages/TopChartPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
-import VerifyEmailPage from './pages/VerifyEmailPage'
 import UserSearchPage from './pages/UserSearchPage'
 import UserProfilePage from './pages/UserProfilePage'
 
@@ -35,7 +34,6 @@ export default function App() {
             <Route path="/top" element={<TopChartPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            <Route path="/verify-email" element={<VerifyEmailPage />} />
             <Route path="/users" element={<ProtectedRoute><UserSearchPage /></ProtectedRoute>} />
             <Route path="/users/:username" element={<ProtectedRoute><UserProfilePage /></ProtectedRoute>} />
           </Routes>

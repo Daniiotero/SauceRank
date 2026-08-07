@@ -5,7 +5,6 @@ import com.saucerank.dto.LoginRequest;
 import com.saucerank.dto.MessageResponse;
 import com.saucerank.dto.RegisterRequest;
 import com.saucerank.service.AuthService;
-import com.saucerank.service.EmailVerificationService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,11 +14,9 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
-    private final EmailVerificationService emailVerificationService;
 
-    public AuthController(AuthService authService, EmailVerificationService emailVerificationService) {
+    public AuthController(AuthService authService) {
         this.authService = authService;
-        this.emailVerificationService = emailVerificationService;
     }
 
     @PostMapping("/register")
@@ -31,11 +28,5 @@ public class AuthController {
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         AuthResponse response = authService.login(request);
         return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/verify")
-    public ResponseEntity<MessageResponse> verify(@RequestParam String token) {
-        emailVerificationService.verify(token);
-        return ResponseEntity.ok(new MessageResponse("Tu cuenta ha sido activada. Ya puedes iniciar sesión."));
     }
 }

@@ -111,28 +111,28 @@ dos usuarios con la misma contraseña obtienen hashes distintos. La
 verificación se hace con `matches()`, que es resistente a timing
 attacks.
 
-### Verificación de email
+### Registro sin verificación de email
 
-Al registrarse la cuenta queda **inactiva** (`enabled=false`) y no
-puede iniciar sesión hasta verificar el email con un **token de un
-solo uso** (32 bytes aleatorios, guardado como SHA-256, expira en 24
-horas). El endpoint `GET /api/auth/verify?token=...` la activa y
-borra el token.
+Al registrarse la cuenta se crea **directamente activa**: el usuario
+puede iniciar sesión de inmediato, sin necesidad de confirmar el
+email.
 
-La respuesta del registro es siempre la misma ("Revisa tu correo"),
-tanto si la cuenta se creó como si el usuario o el email ya existían
-(no se confirma que exista → evita *user enumeration*). El login usa
-un mensaje único neutro ("Usuario o contraseña incorrectos") tanto
-para usuario inexistente, contraseña incorrecta o cuenta sin activar.
+La respuesta del registro es siempre la misma ("Cuenta creada
+correctamente"), tanto si la cuenta se creó como si el usuario o el
+email ya existían (no se confirma que exista → evita *user
+enumeration*). El login usa un mensaje único neutro ("Usuario o
+contraseña incorrectos") tanto para usuario inexistente como para
+contraseña incorrecta.
 
 **Envío del correo** (`backend/src/main/resources/application.yml`):
+se usa únicamente para notificar el bloqueo de cuenta por intentos
+fallidos (`LoginAttemptService`).
 
 ```yaml
 app:
   mail:
     enabled: ${MAIL_ENABLED:false}    # true en producción
     from: ${MAIL_FROM:noreply@saucerank.com}
-  frontend-url: ${FRONTEND_URL:http://localhost:5173}
 
 spring:
   mail:
@@ -144,8 +144,7 @@ spring:
 
 En desarrollo (`MAIL_ENABLED=false`) los correos se imprimen en el
 log del backend: busca la línea
-`[DEV] Email a <correo> — Asunto: ... — Cuerpo: ...` (incluye el
-enlace de verificación).
+`[DEV] Email a <correo> — Asunto: ... — Cuerpo: ...`.
 
 ### Rate limiting y bloqueo de cuenta
 

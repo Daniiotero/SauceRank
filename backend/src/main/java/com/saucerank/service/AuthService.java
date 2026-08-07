@@ -26,19 +26,16 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final BreachedPasswordService breachedPasswordService;
-    private final EmailVerificationService emailVerificationService;
     private final LoginAttemptService loginAttemptService;
     private final String dummyPasswordHash;
 
     public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil,
                        BreachedPasswordService breachedPasswordService,
-                       EmailVerificationService emailVerificationService,
                        LoginAttemptService loginAttemptService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
         this.breachedPasswordService = breachedPasswordService;
-        this.emailVerificationService = emailVerificationService;
         this.loginAttemptService = loginAttemptService;
         this.dummyPasswordHash = passwordEncoder.encode("saucerank-dummy-password");
     }
@@ -70,14 +67,13 @@ public class AuthService {
                     "Esta contraseña ha aparecido en una filtración conocida. Elige otra");
         }
 
-        String neutralMessage = "Revisa tu correo para activar tu cuenta";
+        String neutralMessage = "Cuenta creada correctamente";
         if (userRepository.existsByUsername(username) || userRepository.existsByEmail(email)) {
             return new MessageResponse(neutralMessage);
         }
 
         User user = new User(username, email, passwordEncoder.encode(password));
-        user = userRepository.save(user);
-        emailVerificationService.createAndSendVerification(user);
+        userRepository.save(user);
 
         return new MessageResponse(neutralMessage);
     }
@@ -109,9 +105,6 @@ public class AuthService {
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
             loginAttemptService.registerFailure(username, user.getEmail());
-            throw new ApiException(HttpStatus.UNAUTHORIZED, NEUTRAL_LOGIN_MESSAGE);
-        }
-        if (!user.isEnabled()) {
             throw new ApiException(HttpStatus.UNAUTHORIZED, NEUTRAL_LOGIN_MESSAGE);
         }
 

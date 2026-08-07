@@ -58,7 +58,7 @@ describe('AuthContext', () => {
   })
 
   test('register devuelve el mensaje sin iniciar sesion', async () => {
-    authApi.register.mockResolvedValue({ data: { message: 'Revisa tu correo' } })
+    authApi.register.mockResolvedValue({ data: { message: 'Cuenta creada correctamente' } })
     renderWithProvider()
     fireEvent.click(screen.getByText('register'))
     await waitFor(() => expect(screen.getByTestId('username')).toHaveTextContent('anon'))

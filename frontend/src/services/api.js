@@ -29,7 +29,6 @@ api.interceptors.response.use(
 export const authApi = {
   register: (data) => api.post('/auth/register', data),
   login: (data) => api.post('/auth/login', data),
-  verify: (token) => api.get('/auth/verify', { params: { token } }),
   check: () => api.get('/check-token')
 }
 

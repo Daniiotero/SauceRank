@@ -1,5 +1,6 @@
 package com.saucerank.controller;
 
+import com.saucerank.dto.TopAlbumResponse;
 import com.saucerank.dto.TopSongResponse;
 import com.saucerank.dto.VoteRequest;
 import com.saucerank.service.VoteService;
@@ -37,6 +38,11 @@ public class VoteController {
     @GetMapping("/top")
     public ResponseEntity<List<TopSongResponse>> getTop() {
         return ResponseEntity.ok(voteService.getTopSongs(20));
+    }
+
+    @GetMapping("/top-albums")
+    public ResponseEntity<List<TopAlbumResponse>> getTopAlbums() {
+        return ResponseEntity.ok(voteService.getTopAlbums(20));
     }
 
     @GetMapping("/check/{songId}")

@@ -1,11 +1,13 @@
 package com.saucerank.service;
 
+import com.saucerank.dto.TopAlbumResponse;
 import com.saucerank.dto.TopSongResponse;
 import com.saucerank.errors.ApiException;
 import com.saucerank.model.Album;
 import com.saucerank.model.Song;
 import com.saucerank.model.User;
 import com.saucerank.model.Vote;
+import com.saucerank.repository.AlbumRepository;
 import com.saucerank.repository.SongRepository;
 import com.saucerank.repository.UserRepository;
 import com.saucerank.repository.VoteRepository;
@@ -40,6 +42,9 @@ class VoteServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private AlbumRepository albumRepository;
 
     @InjectMocks
     private VoteService voteService;
@@ -200,6 +205,67 @@ class VoteServiceTest {
 
         assertEquals(1, top.size());
         assertEquals(1, top.get(0).getRank());
+        assertEquals(0.0, top.get(0).getAverageScore(), 0.001);
+    }
+
+    @Test
+    void getTopAlbumsCalculaLaMediaDeTodosSusVotos() {
+        List<Object[]> rows = new ArrayList<>();
+        rows.add(new Object[]{5L, 12L, 8.75});
+        rows.add(new Object[]{6L, 4L, 7.25});
+        when(voteRepository.findTopAlbums()).thenReturn(rows);
+
+        Album album5 = new Album("Sauce Boyz", 2020, "cover5", "ALBUM");
+        album5.setId(5L);
+        Album album6 = new Album("3MEN2 KBRN", 2023, null, "ALBUM");
+        album6.setId(6L);
+        when(albumRepository.findById(5L)).thenReturn(Optional.of(album5));
+        when(albumRepository.findById(6L)).thenReturn(Optional.of(album6));
+
+        List<TopAlbumResponse> top = voteService.getTopAlbums(20);
+
+        assertEquals(2, top.size());
+        assertEquals(1, top.get(0).getRank());
+        assertEquals(5L, top.get(0).getAlbumId());
+        assertEquals("Sauce Boyz", top.get(0).getAlbumName());
+        assertEquals(2020, top.get(0).getAlbumYear());
+        assertEquals("cover5", top.get(0).getCoverUrl());
+        assertEquals(12L, top.get(0).getVoteCount());
+        assertEquals(8.75, top.get(0).getAverageScore(), 0.001);
+
+        assertEquals(2, top.get(1).getRank());
+        assertEquals("3MEN2 KBRN", top.get(1).getAlbumName());
+        assertEquals(7.25, top.get(1).getAverageScore(), 0.001);
+    }
+
+    @Test
+    void getTopAlbumsSaltaAlbumesQueNoExisten() {
+        List<Object[]> rows = new ArrayList<>();
+        rows.add(new Object[]{5L, 12L, 8.75});
+        when(voteRepository.findTopAlbums()).thenReturn(rows);
+        when(albumRepository.findById(5L)).thenReturn(Optional.empty());
+
+        List<TopAlbumResponse> top = voteService.getTopAlbums(20);
+
+        assertTrue(top.isEmpty());
+    }
+
+    @Test
+    void getTopAlbumsRespetaElLimiteYLaMediaNula() {
+        List<Object[]> rows = new ArrayList<>();
+        rows.add(new Object[]{5L, 2L, null});
+        rows.add(new Object[]{6L, 1L, 6.0});
+        when(voteRepository.findTopAlbums()).thenReturn(rows);
+
+        Album album5 = new Album("Sauce Boyz", 2020, null, "ALBUM");
+        album5.setId(5L);
+        when(albumRepository.findById(5L)).thenReturn(Optional.of(album5));
+
+        List<TopAlbumResponse> top = voteService.getTopAlbums(1);
+
+        assertEquals(1, top.size());
+        assertEquals(1, top.get(0).getRank());
+        assertEquals(5L, top.get(0).getAlbumId());
         assertEquals(0.0, top.get(0).getAverageScore(), 0.001);
     }
 }

@@ -17,6 +17,10 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
            "FROM Vote v GROUP BY v.song.id ORDER BY AVG(v.score) DESC, COUNT(v) DESC")
     List<Object[]> findTopVotedSongs();
 
+    @Query("SELECT v.song.album.id, COUNT(v) as cnt, AVG(v.score) as avgScore " +
+           "FROM Vote v GROUP BY v.song.album.id ORDER BY AVG(v.score) DESC, COUNT(v) DESC")
+    List<Object[]> findTopAlbums();
+
     @Query("SELECT v.song.id, COUNT(v) as cnt FROM Vote v WHERE v.song.album.id = :albumId GROUP BY v.song.id ORDER BY cnt DESC")
     List<Object[]> findVoteCountsByAlbumId(@Param("albumId") Long albumId);
 

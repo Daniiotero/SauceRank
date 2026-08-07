@@ -1,10 +1,13 @@
 package com.saucerank.service;
 
+import com.saucerank.dto.TopAlbumResponse;
 import com.saucerank.dto.TopSongResponse;
 import com.saucerank.errors.ApiException;
+import com.saucerank.model.Album;
 import com.saucerank.model.Song;
 import com.saucerank.model.User;
 import com.saucerank.model.Vote;
+import com.saucerank.repository.AlbumRepository;
 import com.saucerank.repository.SongRepository;
 import com.saucerank.repository.UserRepository;
 import com.saucerank.repository.VoteRepository;
@@ -25,12 +28,14 @@ public class VoteService {
     private final VoteRepository voteRepository;
     private final SongRepository songRepository;
     private final UserRepository userRepository;
+    private final AlbumRepository albumRepository;
 
     public VoteService(VoteRepository voteRepository, SongRepository songRepository,
-                       UserRepository userRepository) {
+                       UserRepository userRepository, AlbumRepository albumRepository) {
         this.voteRepository = voteRepository;
         this.songRepository = songRepository;
         this.userRepository = userRepository;
+        this.albumRepository = albumRepository;
     }
 
     @Transactional
@@ -105,6 +110,35 @@ public class VoteService {
                     song.getAlbum().getName(),
                     song.getAlbum().getYear(),
                     song.getSpotifyTrackId(),
+                    count,
+                    avgScore,
+                    rank
+            ));
+            rank++;
+        }
+
+        return result;
+    }
+
+    public List<TopAlbumResponse> getTopAlbums(int limit) {
+        List<Object[]> topAlbums = voteRepository.findTopAlbums();
+        List<TopAlbumResponse> result = new ArrayList<>();
+        int rank = 1;
+
+        for (Object[] row : topAlbums) {
+            if (rank > limit) break;
+            Long albumId = (Long) row[0];
+            Long count = (Long) row[1];
+            double avgScore = row[2] != null ? ((Number) row[2]).doubleValue() : 0.0;
+
+            Album album = albumRepository.findById(albumId).orElse(null);
+            if (album == null) continue;
+
+            result.add(new TopAlbumResponse(
+                    albumId,
+                    album.getName(),
+                    album.getYear(),
+                    album.getCoverUrl(),
                     count,
                     avgScore,
                     rank

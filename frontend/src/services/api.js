@@ -41,6 +41,7 @@ export const voteApi = {
   vote: (songId, score) => api.post('/votes', { songId, score }),
   unvote: (songId) => api.delete(`/votes/${songId}`),
   getTop: () => api.get('/votes/top'),
+  getTopAlbums: () => api.get('/votes/top-albums'),
   check: (songId) => api.get(`/votes/check/${songId}`)
 }
 

@@ -1,16 +1,33 @@
 import { useState, useEffect } from 'react'
 import { voteApi } from '../services/api'
 import TopChart from '../components/TopChart'
+import TopAlbums from '../components/TopAlbums'
 import PageHeader from '../components/ui/PageHeader'
+import Icon from '../components/ui/Icon'
 import { Skeleton, SongListSkeleton } from '../components/ui/Skeleton'
+
+function SectionHeader({ icon, title }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 'var(--space-4)' }}>
+      <Icon name={icon} size={16} className="text-ice" />
+      <h2 style={{ fontSize: 18, fontWeight: 600, fontFamily: 'var(--font-display)', letterSpacing: '0.02em', margin: 0 }}>
+        {title}
+      </h2>
+    </div>
+  )
+}
 
 export default function TopChartPage() {
   const [songs, setSongs] = useState([])
+  const [albums, setAlbums] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    voteApi.getTop()
-      .then(res => setSongs(res.data))
+    Promise.all([voteApi.getTop(), voteApi.getTopAlbums()])
+      .then(([songsRes, albumsRes]) => {
+        setSongs(songsRes.data)
+        setAlbums(albumsRes.data)
+      })
       .catch(err => console.error(err))
       .finally(() => setLoading(false))
   }, [])
@@ -37,10 +54,17 @@ export default function TopChartPage() {
             Top <span style={{ color: 'var(--accent-bright)' }}>SauceRank</span>
           </>
         }
-        description="Las canciones más votadas por la comunidad"
+        description="Los temas y discos más votados por la comunidad"
         align="center"
       />
+
+      <SectionHeader icon="trophy" title="Top canciones" />
       <TopChart songs={songs} />
+
+      <div style={{ marginTop: 'var(--space-7)' }}>
+        <SectionHeader icon="music" title="Top álbumes" />
+        <TopAlbums albums={albums} />
+      </div>
     </div>
   )
 }

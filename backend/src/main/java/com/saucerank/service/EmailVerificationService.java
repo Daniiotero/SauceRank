@@ -21,7 +21,7 @@ import java.util.HexFormat;
 public class EmailVerificationService {
 
     private static final int TOKEN_LIFETIME_HOURS = 24;
-    private static final String INVALID_LINK_MESSAGE = "El enlace de verificación es inválido o expiró";
+    private static final String INVALID_LINK_MESSAGE = "El enlace de verificación no es válido o ha caducado";
 
     private final EmailVerificationTokenRepository tokenRepository;
     private final UserRepository userRepository;
@@ -73,11 +73,11 @@ public class EmailVerificationService {
     private void sendVerificationEmail(User user, String token) {
         String url = frontendUrl + "/verify-email?token=" + token;
         mailService.send(user.getEmail(),
-                "Activá tu cuenta en SauceRank",
+                "Activa tu cuenta en SauceRank",
                 "Hola " + user.getUsername() + "!\n\n"
-                        + "Para activar tu cuenta hacé clic en este enlace (válido por 24 horas):\n"
+                        + "Para activar tu cuenta haz clic en este enlace (válido durante 24 horas):\n"
                         + url + "\n\n"
-                        + "Si no te registraste en SauceRank, podés ignorar este correo.");
+                        + "Si no te has registrado en SauceRank, puedes ignorar este correo.");
     }
 
     private String sha256Hex(String value) {

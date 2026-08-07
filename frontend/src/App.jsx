@@ -48,7 +48,7 @@ export default function App() {
         fontSize: 13,
         color: 'var(--text-muted)'
       }}>
-        SauceRank &middot; Eladio Carrion Discography
+        SauceRank &middot; Discografía de Eladio Carrión
       </footer>
     </div>
   )

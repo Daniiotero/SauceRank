@@ -23,7 +23,7 @@ describe('AlbumCard', () => {
   test('renderiza el nombre, el año y el tipo del album', () => {
     renderCard()
     expect(screen.getByText('Sauce Boyz')).toBeInTheDocument()
-    expect(screen.getByText('2020 · Album')).toBeInTheDocument()
+    expect(screen.getByText('2020 · Álbum')).toBeInTheDocument()
   })
 
   test('enlaza a la pagina del album', () => {

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
-const TYPE_LABEL = { ALBUM: 'Album', EP: 'EP', MIXTAPE: 'Mixtape' }
+const TYPE_LABEL = { ALBUM: 'Álbum', EP: 'EP', MIXTAPE: 'Mixtape' }
 
 export default function AlbumCard({ album }) {
   const [loaded, setLoaded] = useState(false)

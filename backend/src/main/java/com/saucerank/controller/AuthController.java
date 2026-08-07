@@ -36,6 +36,6 @@ public class AuthController {
     @GetMapping("/verify")
     public ResponseEntity<MessageResponse> verify(@RequestParam String token) {
         emailVerificationService.verify(token);
-        return ResponseEntity.ok(new MessageResponse("Tu cuenta fue activada. Ya podés iniciar sesión."));
+        return ResponseEntity.ok(new MessageResponse("Tu cuenta ha sido activada. Ya puedes iniciar sesión."));
     }
 }

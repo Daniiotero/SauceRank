@@ -43,7 +43,7 @@ public class UserService {
 
     public UserProfileResponse getUserProfile(Long userId) {
         if (userId == null || userId <= 0) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Id de usuario inválido");
+            throw new ApiException(HttpStatus.BAD_REQUEST, "ID de usuario no válido");
         }
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "User not found"));

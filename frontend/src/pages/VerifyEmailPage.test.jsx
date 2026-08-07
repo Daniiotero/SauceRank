@@ -34,12 +34,12 @@ describe('VerifyEmailPage', () => {
   test('muestra error cuando el token es invalido', async () => {
     authApi.verify.mockRejectedValue(new Error('invalido'))
     renderAt('/verify-email?token=bad')
-    await waitFor(() => expect(screen.getByText('Enlace inválido o expirado')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText('Enlace no válido o caducado')).toBeInTheDocument())
   })
 
   test('muestra error si falta el token', async () => {
     renderAt('/verify-email')
-    await waitFor(() => expect(screen.getByText('Enlace inválido o expirado')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText('Enlace no válido o caducado')).toBeInTheDocument())
     expect(authApi.verify).not.toHaveBeenCalled()
   })
 })

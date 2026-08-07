@@ -23,8 +23,8 @@ public class GlobalExceptionHandler {
 
         ApiErrorResponse body = new ApiErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
-                "Datos inválidos",
-                "La solicitud contiene datos inválidos",
+                "Datos no válidos",
+                "La solicitud contiene datos no válidos",
                 errors);
         return ResponseEntity.badRequest().body(body);
     }
@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponse> handleUnreadableBody(HttpMessageNotReadableException ex) {
         ApiErrorResponse body = new ApiErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
-                "Solicitud inválida",
+                "Solicitud no válida",
                 "El cuerpo de la solicitud no es válido",
                 null);
         return ResponseEntity.badRequest().body(body);
@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponse> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
         ApiErrorResponse body = new ApiErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
-                "Parámetro inválido",
+                "Parámetro no válido",
                 "El valor '" + ex.getValue() + "' no es válido",
                 null);
         return ResponseEntity.badRequest().body(body);
@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponse> handleMissingParameter(MissingServletRequestParameterException ex) {
         ApiErrorResponse body = new ApiErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
-                "Parámetro faltante",
+                "Falta un parámetro",
                 "Falta el parámetro requerido '" + ex.getParameterName() + "'",
                 null);
         return ResponseEntity.badRequest().body(body);

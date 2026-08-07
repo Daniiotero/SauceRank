@@ -38,7 +38,7 @@ public class VoteService {
         requirePositiveId(userId, "userId");
         requirePositiveId(songId, "songId");
         if (score < MIN_SCORE || score > MAX_SCORE) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, "El puntaje debe estar entre 1 y 10");
+            throw new ApiException(HttpStatus.BAD_REQUEST, "La puntuación debe estar entre 1 y 10");
         }
 
         Optional<Vote> existing = voteRepository.findByUserIdAndSongId(userId, songId);
@@ -80,7 +80,7 @@ public class VoteService {
 
     private void requirePositiveId(Long id, String name) {
         if (id == null || id <= 0) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, name + " inválido");
+            throw new ApiException(HttpStatus.BAD_REQUEST, name + " no válido");
         }
     }
 

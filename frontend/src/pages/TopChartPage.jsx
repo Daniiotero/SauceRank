@@ -37,7 +37,7 @@ export default function TopChartPage() {
             Top <span style={{ color: 'var(--accent-bright)' }}>SauceRank</span>
           </>
         }
-        description="Las canciones mas votadas por la comunidad"
+        description="Las canciones más votadas por la comunidad"
         align="center"
       />
       <TopChart songs={songs} />

@@ -44,7 +44,7 @@ export default function UserProfilePage() {
       <EmptyState
         icon="user"
         title="Usuario no encontrado"
-        description="Este perfil no existe o fue eliminado."
+        description="Este perfil no existe o ha sido eliminado."
         style={{ marginTop: 'var(--space-7)' }}
       />
     )
@@ -74,14 +74,14 @@ export default function UserProfilePage() {
       </div>
 
       <h2 style={{ fontSize: 16, fontWeight: 600, fontFamily: 'var(--font-display)', letterSpacing: '0.02em', marginBottom: 'var(--space-4)' }}>
-        {isOwnProfile ? 'Tus votos' : 'Canciones que voto'}
+        {isOwnProfile ? 'Tus votos' : 'Canciones que ha votado'}
       </h2>
 
       {profile.votes.length === 0 ? (
         <EmptyState
           icon="star"
-          title="Todavia no voto ninguna cancion"
-          description={isOwnProfile ? 'Entra a un disco y puntua tus favoritas.' : null}
+          title="Todavía no ha votado ninguna canción"
+          description={isOwnProfile ? 'Entra en un disco y puntúa tus favoritas.' : null}
         />
       ) : (
         <div className="card" style={{ overflow: 'hidden' }}>
@@ -97,7 +97,7 @@ export default function UserProfilePage() {
                   ].filter(Boolean).join(' · ')}
                 />
                 <SongList.Action>
-                  <span className="vote-avg" title={`Puntaje de ${(v.score ?? 0)}/10`}>
+                  <span className="vote-avg" title={`Puntuación de ${(v.score ?? 0)}/10`}>
                     <Icon name="star" size={13} />
                     {v.score ?? 0}/10
                   </span>

@@ -37,11 +37,11 @@ public class AlbumService {
 
     public AlbumResponse getAlbum(Long albumId, Long currentUserId) {
         if (albumId == null || albumId <= 0) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Id de album inválido");
+            throw new ApiException(HttpStatus.BAD_REQUEST, "ID de álbum no válido");
         }
 
         Album album = albumRepository.findById(albumId)
-                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Album not found"));
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Álbum no encontrado"));
 
         List<Song> songs = songRepository.findByAlbumIdOrderByTrackNumber(albumId);
 

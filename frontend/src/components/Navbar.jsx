@@ -88,7 +88,7 @@ export default function Navbar() {
                   </Link>
                   <button className="dropdown-item" onClick={handleLogout}>
                     <Icon name="logout" size={15} />
-                    Cerrar sesion
+                    Cerrar sesión
                   </button>
                 </div>
               )}
@@ -96,7 +96,7 @@ export default function Navbar() {
           ) : (
             <>
               <SecondaryButton to="/login" size="sm">
-                Iniciar sesion
+                Iniciar sesión
               </SecondaryButton>
               <PrimaryButton to="/register" size="sm" className="hide-mobile">
                 Registrarse
@@ -107,7 +107,7 @@ export default function Navbar() {
           <button
             className="menu-toggle btn btn-ghost btn-sm"
             onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Abrir menu"
+            aria-label="Abrir menú"
             aria-expanded={menuOpen}
           >
             <Icon name="menu" size={18} />

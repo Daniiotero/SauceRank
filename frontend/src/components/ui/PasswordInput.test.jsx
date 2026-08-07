@@ -14,13 +14,13 @@ describe('PasswordInput', () => {
 
     expect(input).toHaveAttribute('type', 'password')
 
-    fireEvent.click(screen.getByRole('button', { name: 'Mostrar contrasena' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Mostrar contraseña' }))
     expect(input).toHaveAttribute('type', 'text')
-    expect(screen.getByRole('button', { name: 'Ocultar contrasena' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByRole('button', { name: 'Ocultar contraseña' })).toHaveAttribute('aria-pressed', 'true')
 
-    fireEvent.click(screen.getByRole('button', { name: 'Ocultar contrasena' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Ocultar contraseña' }))
     expect(input).toHaveAttribute('type', 'password')
-    expect(screen.getByRole('button', { name: 'Mostrar contrasena' })).toHaveAttribute('aria-pressed', 'false')
+    expect(screen.getByRole('button', { name: 'Mostrar contraseña' })).toHaveAttribute('aria-pressed', 'false')
   })
 
   test('propaga el valor al input', () => {

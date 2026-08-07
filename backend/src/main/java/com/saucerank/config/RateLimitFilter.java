@@ -13,7 +13,7 @@ import java.util.Set;
 public class RateLimitFilter extends OncePerRequestFilter {
 
     private static final Set<String> PROTECTED_PATHS = Set.of("/api/auth/login", "/api/auth/register");
-    private static final String MESSAGE = "Demasiadas solicitudes. Intentalo más tarde";
+    private static final String MESSAGE = "Demasiadas solicitudes. Inténtalo más tarde";
 
     private final RateLimitService rateLimitService;
 

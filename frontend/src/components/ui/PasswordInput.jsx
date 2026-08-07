@@ -30,9 +30,9 @@ export default function PasswordInput({
       <button
         type="button"
         onClick={() => setShow(s => !s)}
-        aria-label={show ? 'Ocultar contrasena' : 'Mostrar contrasena'}
+        aria-label={show ? 'Ocultar contraseña' : 'Mostrar contraseña'}
         aria-pressed={show}
-        title={show ? 'Ocultar contrasena' : 'Mostrar contrasena'}
+        title={show ? 'Ocultar contraseña' : 'Mostrar contraseña'}
         style={{
           position: 'absolute',
           right: 6,

@@ -43,7 +43,7 @@ class LoginAttemptServiceTest {
         assertTrue(service.isLocked("sauce"));
         long remaining = service.getRemainingLockoutSeconds("sauce");
         assertTrue(remaining > 4 * 60 && remaining <= 5 * 60);
-        verify(mailService).send(eq("sauce@example.com"), eq("Tu cuenta fue temporalmente bloqueada"),
+        verify(mailService).send(eq("sauce@example.com"), eq("Tu cuenta ha sido bloqueada temporalmente"),
                 contains("5 minutos"));
     }
 

@@ -40,15 +40,15 @@ export default function VerifyEmailPage() {
             <>
               <h1 className="display" style={{ fontSize: 22, marginBottom: 4 }}>Cuenta activada</h1>
               <p style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                Tu cuenta ya esta activa. Ya podes iniciar sesión y votar tus temas favoritos.
+                Tu cuenta ya está activa. Ya puedes iniciar sesión y votar tus temas favoritos.
               </p>
             </>
           )}
           {status === 'error' && (
             <>
-              <h1 className="display" style={{ fontSize: 22, marginBottom: 4 }}>Enlace inválido o expirado</h1>
+              <h1 className="display" style={{ fontSize: 22, marginBottom: 4 }}>Enlace no válido o caducado</h1>
               <p style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                El enlace de verificacion no es valido o ya expiró. Registrate de nuevo
+                El enlace de verificación no es válido o ya ha caducado. Regístrate de nuevo
                 para recibir un correo nuevo.
               </p>
             </>
@@ -56,7 +56,7 @@ export default function VerifyEmailPage() {
         </div>
         {status !== 'loading' && (
           <p style={{ textAlign: 'center', fontSize: 14, color: 'var(--text-secondary)' }}>
-            <Link to="/login" style={{ fontWeight: 600 }}>Ir a iniciar sesion</Link>
+            <Link to="/login" style={{ fontWeight: 600 }}>Ir a iniciar sesión</Link>
           </p>
         )}
       </div>

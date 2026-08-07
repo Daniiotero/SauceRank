@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { albumApi } from "../services/api";
 import AlbumCard from "../components/AlbumCard";
 import { AlbumGridSkeleton } from "../components/ui/Skeleton";
+import PageHeader from "../components/ui/PageHeader";
 
 export default function DiscographyPage() {
 	const [albums, setAlbums] = useState([]);
@@ -26,13 +27,18 @@ export default function DiscographyPage() {
 
 	return (
 		<div className="fade-in">
+			<PageHeader
+				title="Eladio Carrión"
+				description="Toda su discografía. Vota tus temas favoritos"
+				align="center"
+			/>
 			{loading ? (
 				<AlbumGridSkeleton />
 			) : (
 				<>
 					<section>
 						<p className="eyebrow" style={{ marginBottom: "var(--space-4)" }}>
-							Album
+							Álbum
 						</p>
 						<div style={grid}>
 							{albumsList.map((album) => (

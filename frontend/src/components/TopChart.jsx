@@ -7,8 +7,8 @@ export default function TopChart({ songs }) {
     return (
       <EmptyState
         icon="trophy"
-        title="Aun no hay votos"
-        description="Se el primero en votar y aparecera en el top de la comunidad."
+        title="Aún no hay votos"
+        description="Sé el primero en votar y aparecerá en el top de la comunidad."
       />
     )
   }

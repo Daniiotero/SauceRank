@@ -45,7 +45,7 @@ public class AuthService {
 
     public MessageResponse register(RegisterRequest request) {
         if (request == null) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Datos inválidos");
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Datos no válidos");
         }
 
         String username = request.getUsername() == null ? null : request.getUsername().trim();
@@ -67,7 +67,7 @@ public class AuthService {
         }
         if (breachedPasswordService.isBreached(password)) {
             throw new ApiException(HttpStatus.BAD_REQUEST,
-                    "Esta contraseña apareció en una filtración conocida. Elegí otra");
+                    "Esta contraseña ha aparecido en una filtración conocida. Elige otra");
         }
 
         String neutralMessage = "Revisa tu correo para activar tu cuenta";
@@ -84,20 +84,20 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest request) {
         if (request == null) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Datos inválidos");
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Datos no válidos");
         }
 
         String username = request.getUsername() == null ? null : request.getUsername().trim();
         String password = request.getPassword() == null ? null : request.getPassword();
 
         if (username == null || username.isBlank() || password == null || password.isBlank()) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Usuario y contraseña son requeridos");
+            throw new ApiException(HttpStatus.BAD_REQUEST, "El usuario y la contraseña son obligatorios");
         }
 
         if (loginAttemptService.isLocked(username)) {
             long remainingMinutes = loginAttemptService.getRemainingLockoutSeconds(username) / 60 + 1;
             throw new ApiException(HttpStatus.TOO_MANY_REQUESTS,
-                    "Demasiados intentos fallidos. Intentá de nuevo en " + remainingMinutes + " minutos");
+                    "Demasiados intentos fallidos. Inténtalo de nuevo en " + remainingMinutes + " minutos");
         }
 
         User user = userRepository.findByUsername(username)

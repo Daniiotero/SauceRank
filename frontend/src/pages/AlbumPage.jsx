@@ -10,7 +10,7 @@ import EmptyState from '../components/ui/EmptyState'
 import { Skeleton, SongListSkeleton } from '../components/ui/Skeleton'
 import { PrimaryButton } from '../components/ui/Button'
 
-const TYPE_LABEL = { ALBUM: 'Album', EP: 'EP', MIXTAPE: 'Mixtape' }
+const TYPE_LABEL = { ALBUM: 'Álbum', EP: 'EP', MIXTAPE: 'Mixtape' }
 
 export default function AlbumPage() {
   const { id } = useParams()
@@ -63,8 +63,8 @@ export default function AlbumPage() {
     return (
       <EmptyState
         icon="music"
-        title="Album no encontrado"
-        description="El album que buscas no existe o fue movido."
+        title="Álbum no encontrado"
+        description="El álbum que buscas no existe o ha sido movido."
         action={<PrimaryButton to="/" size="sm">Volver a discos</PrimaryButton>}
         style={{ marginTop: 'var(--space-7)' }}
       />
@@ -122,7 +122,7 @@ export default function AlbumPage() {
           </div>
           {!user && (
             <p style={{ marginTop: 'var(--space-4)', fontSize: 13, color: 'var(--text-secondary)' }}>
-              <PrimaryButton to="/login" size="sm" style={{ marginRight: 8 }}>Inicia sesion</PrimaryButton>
+              <PrimaryButton to="/login" size="sm" style={{ marginRight: 8 }}>Inicia sesión</PrimaryButton>
               para votar
             </p>
           )}

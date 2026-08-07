@@ -30,7 +30,7 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<ApiErrorResponse> response = handler.handleBodyValidation(ex);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Datos inválidos", response.getBody().getError());
+        assertEquals("Datos no válidos", response.getBody().getError());
         assertEquals("La contraseña debe tener al menos 6 caracteres",
                 response.getBody().getFieldErrors().get("password"));
     }
@@ -52,7 +52,7 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<ApiErrorResponse> response = handler.handleUnreadableBody(ex);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Solicitud inválida", response.getBody().getError());
+        assertEquals("Solicitud no válida", response.getBody().getError());
     }
 
     @Test

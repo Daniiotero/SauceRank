@@ -47,12 +47,12 @@ public class LoginAttemptService {
             attempt.lockedUntil = clock.instant().plus(Duration.ofMinutes(lockMinutes));
             if (newLockoutEpisode) {
                 mailService.send(email,
-                        "Tu cuenta fue temporalmente bloqueada",
+                        "Tu cuenta ha sido bloqueada temporalmente",
                         "Hola " + username + "!\n\n"
                                 + "Se detectaron varios intentos fallidos de inicio de sesión en tu cuenta.\n"
-                                + "Por seguridad, quedó bloqueada temporalmente por " + lockMinutes + " minutos.\n"
-                                + "Si fuiste vos, esperá ese tiempo e intentá de nuevo.\n"
-                                + "Si no fuiste vos, te recomendamos cambiar tu contraseña cuando vuelvas a entrar.");
+                                + "Por seguridad, tu cuenta ha quedado bloqueada temporalmente durante " + lockMinutes + " minutos.\n"
+                                + "Si fuiste tú, espera ese tiempo e inténtalo de nuevo.\n"
+                                + "Si no fuiste tú, te recomendamos cambiar tu contraseña cuando vuelvas a entrar.");
             }
         }
     }

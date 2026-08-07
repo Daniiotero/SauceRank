@@ -6,7 +6,7 @@ export default function StarRating({ score = 0, onRate, disabled, size = 18 }) {
       className="star-rating"
       data-disabled={disabled}
       role="radiogroup"
-      aria-label="Puntaje de 1 a 10"
+      aria-label="Puntuación del 1 al 10"
     >
       {stars.map(n => {
         const filled = n <= score

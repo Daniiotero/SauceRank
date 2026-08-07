@@ -26,8 +26,8 @@ const songs = [
 describe('TopChart', () => {
   test('muestra empty state cuando no hay canciones', () => {
     render(<TopChart songs={[]} />)
-    expect(screen.getByText('Aun no hay votos')).toBeInTheDocument()
-    expect(screen.getByText(/se el primero en votar/i)).toBeInTheDocument()
+    expect(screen.getByText('Aún no hay votos')).toBeInTheDocument()
+    expect(screen.getByText(/sé el primero en votar/i)).toBeInTheDocument()
   })
 
   test('renderiza las canciones con su media', () => {

@@ -26,7 +26,7 @@ export function AuthProvider({ children }) {
     const res = await authApi.login({ username, password })
     const data = res.data
     if (!data || !data.token) {
-      throw new Error('Respuesta invalida del servidor')
+      throw new Error('Respuesta no válida del servidor')
     }
     localStorage.setItem('token', data.token)
     localStorage.setItem('user', JSON.stringify({ id: data.userId, username: data.username }))

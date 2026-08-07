@@ -33,7 +33,7 @@ export default function UserSearchPage() {
       <PageHeader
         eyebrow="Comunidad"
         title="Usuarios"
-        description="Encontra usuarios y mira sus canciones votadas"
+        description="Encuentra usuarios y mira las canciones que han votado"
       />
 
       <form onSubmit={handleSearch} style={{ maxWidth: 460, marginBottom: 'var(--space-5)', display: 'flex', gap: 'var(--space-2)' }}>

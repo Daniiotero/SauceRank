@@ -20,7 +20,7 @@ export default function LoginPage() {
       await login(username, password)
       navigate('/')
     } catch (err) {
-      setError(err.response?.data?.error || 'Credenciales invalidas')
+      setError(err.response?.data?.error || 'Credenciales no válidas')
     } finally {
       setLoading(false)
     }
@@ -41,7 +41,7 @@ export default function LoginPage() {
           </div>
           <h1 className="display" style={{ fontSize: 22, marginBottom: 4 }}>Bienvenido</h1>
           <p style={{ fontSize: 14, color: 'var(--text-secondary)' }}>
-            Ingresa a tu cuenta de SauceRank
+            Accede a tu cuenta de SauceRank
           </p>
         </div>
 
@@ -66,7 +66,7 @@ export default function LoginPage() {
           </div>
           <div style={{ marginBottom: 'var(--space-5)' }}>
             <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)' }}>
-              Contrasena
+              Contraseña
             </label>
             <PasswordInput
               value={password}
@@ -87,8 +87,8 @@ export default function LoginPage() {
         </form>
 
         <p style={{ marginTop: 'var(--space-5)', textAlign: 'center', fontSize: 14, color: 'var(--text-secondary)' }}>
-          No tenes cuenta?{' '}
-          <Link to="/register" style={{ fontWeight: 600 }}>Registrate</Link>
+          ¿No tienes cuenta?{' '}
+          <Link to="/register" style={{ fontWeight: 600 }}>Regístrate</Link>
         </p>
       </div>
     </div>

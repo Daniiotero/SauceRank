@@ -21,7 +21,7 @@ export default function RegisterPage() {
       await register(username, email, password)
       setRegistered(true)
     } catch (err) {
-      setError(err.response?.data?.error || 'No se pudo completar el registro. Intentalo de nuevo.')
+      setError(err.response?.data?.error || 'No se pudo completar el registro. Inténtalo de nuevo.')
     } finally {
       setLoading(false)
     }
@@ -41,15 +41,15 @@ export default function RegisterPage() {
               <img src="/image.png" alt="" className="brand-logo" />
               SAUCERANK
             </div>
-            <h1 className="display" style={{ fontSize: 22, marginBottom: 4 }}>Revisa tu correo</h1>
+            <h1 className="display" style={{ fontSize: 22, marginBottom: 4 }}>Consulta tu correo</h1>
             <p style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-              Te enviamos un enlace de activacion. Abri el correo y hacé clic en el enlace
-              para activar tu cuenta. Si no lo ves, revisa spam.
+              Te hemos enviado un enlace de activación. Abre el correo y haz clic en el enlace
+              para activar tu cuenta. Si no lo ves, revisa la carpeta de spam.
             </p>
           </div>
           <p style={{ textAlign: 'center', fontSize: 14, color: 'var(--text-secondary)' }}>
-            Ya activaste tu cuenta?{' '}
-            <Link to="/login" style={{ fontWeight: 600 }}>Inicia sesion</Link>
+            ¿Ya has activado tu cuenta?{' '}
+            <Link to="/login" style={{ fontWeight: 600 }}>Inicia sesión</Link>
           </p>
         </div>
       </div>
@@ -71,7 +71,7 @@ export default function RegisterPage() {
           </div>
           <h1 className="display" style={{ fontSize: 22, marginBottom: 4 }}>Crear cuenta</h1>
           <p style={{ fontSize: 14, color: 'var(--text-secondary)' }}>
-            Unite a la comunidad SauceRank
+            Únete a la comunidad SauceRank
           </p>
         </div>
 
@@ -97,7 +97,7 @@ export default function RegisterPage() {
           </div>
           <div style={{ marginBottom: 'var(--space-4)' }}>
             <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)' }}>
-              Email
+              Correo electrónico
             </label>
             <input
               type="email"
@@ -110,7 +110,7 @@ export default function RegisterPage() {
           </div>
           <div style={{ marginBottom: 'var(--space-5)' }}>
             <label style={{ display: 'block', marginBottom: 6, fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)' }}>
-              Contrasena
+              Contraseña
             </label>
             <PasswordInput
               value={password}
@@ -133,8 +133,8 @@ export default function RegisterPage() {
         </form>
 
         <p style={{ marginTop: 'var(--space-5)', textAlign: 'center', fontSize: 14, color: 'var(--text-secondary)' }}>
-          Ya tenes cuenta?{' '}
-          <Link to="/login" style={{ fontWeight: 600 }}>Inicia sesion</Link>
+          ¿Ya tienes cuenta?{' '}
+          <Link to="/login" style={{ fontWeight: 600 }}>Inicia sesión</Link>
         </p>
       </div>
     </div>

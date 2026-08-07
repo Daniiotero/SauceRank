@@ -4,6 +4,7 @@ import { albumApi, voteApi } from '../services/api'
 import { useAuth } from '../context/AuthContext'
 import SongList from '../components/SongList'
 import StarRating from '../components/StarRating'
+import VotePopover from '../components/VotePopover'
 import SpotifyPreview from '../components/SpotifyPreview'
 import Icon from '../components/ui/Icon'
 import EmptyState from '../components/ui/EmptyState'
@@ -153,12 +154,21 @@ export default function AlbumPage() {
               <SongList.Action>
                 <SpotifyPreview spotifyTrackId={song.spotifyTrackId} />
                 {user && (
-                  <StarRating
-                    score={song.votedByCurrentUser ? song.userScore : 0}
-                    onRate={score => handleVote(song.id, score)}
-                    disabled={voting}
-                    size={16}
-                  />
+                  <>
+                    <span className="vote-inline">
+                      <StarRating
+                        score={song.votedByCurrentUser ? song.userScore : 0}
+                        onRate={score => handleVote(song.id, score)}
+                        disabled={voting}
+                        size={16}
+                      />
+                    </span>
+                    <VotePopover
+                      score={song.votedByCurrentUser ? song.userScore : 0}
+                      onRate={score => handleVote(song.id, score)}
+                      disabled={voting}
+                    />
+                  </>
                 )}
               </SongList.Action>
             </SongList.Row>

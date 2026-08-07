@@ -671,6 +671,69 @@ ul, ol { list-style: none; }
   text-align: center;
 }
 
+/* ---- Vote button (mobile) ---- */
+.vote-inline {
+  display: inline-flex;
+}
+.vote-mobile {
+  display: none;
+}
+.vote-mobile-score {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-bright);
+  font-variant-numeric: tabular-nums;
+}
+
+.vote-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 4, 8, 0.7);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  z-index: 400;
+}
+.vote-modal {
+  width: 100%;
+  max-width: 360px;
+  background: linear-gradient(180deg, var(--surface) 0%, var(--bg-raised) 100%);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-3);
+  padding: var(--space-4);
+}
+.vote-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+}
+.vote-modal-title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+}
+.vote-modal .star-rating {
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.vote-modal .star-btn {
+  width: 30px;
+  height: 30px;
+}
+.vote-modal .star-score {
+  flex-basis: 100%;
+  margin-left: 0;
+  text-align: center;
+}
+
 /* ---- Chip ---- */
 .chip {
   display: inline-flex;
@@ -753,6 +816,14 @@ ul, ol { list-style: none; }
   .star-btn {
     width: 32px;
     height: 32px;
+  }
+  .vote-inline {
+    display: none;
+  }
+  .vote-mobile {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
   }
 }
 

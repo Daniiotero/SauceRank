@@ -58,12 +58,12 @@ export default function TopChartPage() {
         align="center"
       />
 
-      <SectionHeader icon="trophy" title="Top canciones" />
-      <TopChart songs={songs} />
+      <SectionHeader icon="music" title="Top álbumes" />
+      <TopAlbums albums={albums} />
 
       <div style={{ marginTop: 'var(--space-7)' }}>
-        <SectionHeader icon="music" title="Top álbumes" />
-        <TopAlbums albums={albums} />
+        <SectionHeader icon="trophy" title="Top canciones" />
+        <TopChart songs={songs} />
       </div>
     </div>
   )

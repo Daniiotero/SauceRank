@@ -39,12 +39,12 @@ export default function UserSearchPage() {
 
 	return (
 		<div className="fade-in">
-			<PageHeader
-				eyebrow="Comunidad"
-				title="Usuarios"
-				description="Toda la comunidad. Encuentra usuarios y mira las canciones que han votado"
-				style={{ justifyContent: "center", textAlign: "center" }}
-			/>
+      <PageHeader
+        align="center"
+        eyebrow="Comunidad"
+        title="Usuarios"
+        description="Toda la comunidad. Encuentra usuarios y mira las canciones que han votado"
+      />
 
 			<form
 				onSubmit={(e) => e.preventDefault()}

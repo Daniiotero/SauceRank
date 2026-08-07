@@ -1,6 +1,7 @@
 package com.saucerank.controller;
 
 import com.saucerank.dto.UserProfileResponse;
+import com.saucerank.dto.UserSummaryResponse;
 import com.saucerank.model.User;
 import com.saucerank.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +19,13 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping
+    public ResponseEntity<List<UserSummaryResponse>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
     @GetMapping("/search")
-    public ResponseEntity<List<User>> searchUsers(@RequestParam String q) {
+    public ResponseEntity<List<UserSummaryResponse>> searchUsers(@RequestParam String q) {
         return ResponseEntity.ok(userService.searchUsers(q));
     }
 

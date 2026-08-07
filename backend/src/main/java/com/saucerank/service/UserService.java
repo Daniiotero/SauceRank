@@ -1,6 +1,7 @@
 package com.saucerank.service;
 
 import com.saucerank.dto.UserProfileResponse;
+import com.saucerank.dto.UserSummaryResponse;
 import com.saucerank.dto.VoteDetailResponse;
 import com.saucerank.errors.ApiException;
 import com.saucerank.model.User;
@@ -26,7 +27,13 @@ public class UserService {
         this.voteRepository = voteRepository;
     }
 
-    public List<User> searchUsers(String query) {
+    public List<UserSummaryResponse> getAllUsers() {
+        return userRepository.findAllByOrderByUsernameAsc().stream()
+                .map(user -> new UserSummaryResponse(user.getId(), user.getUsername(), user.getEmail()))
+                .toList();
+    }
+
+    public List<UserSummaryResponse> searchUsers(String query) {
         if (query == null || query.isBlank()) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "El término de búsqueda no puede estar vacío");
         }
@@ -38,7 +45,9 @@ public class UserService {
                 .replace("\\", "\\\\")
                 .replace("%", "\\%")
                 .replace("_", "\\_");
-        return userRepository.searchByUsername(escaped);
+        return userRepository.searchByUsername(escaped).stream()
+                .map(user -> new UserSummaryResponse(user.getId(), user.getUsername(), user.getEmail()))
+                .toList();
     }
 
     public UserProfileResponse getUserProfile(Long userId) {

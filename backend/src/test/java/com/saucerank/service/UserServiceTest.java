@@ -1,6 +1,7 @@
 package com.saucerank.service;
 
 import com.saucerank.dto.UserProfileResponse;
+import com.saucerank.dto.UserSummaryResponse;
 import com.saucerank.dto.VoteDetailResponse;
 import com.saucerank.errors.ApiException;
 import com.saucerank.model.Album;
@@ -102,13 +103,27 @@ class UserServiceTest {
     }
 
     @Test
+    void getAllUsersDevuelveTodosLosUsuariosOrdenados() {
+        User other = new User("ana", "ana@example.com", "hashed");
+        when(userRepository.findAllByOrderByUsernameAsc()).thenReturn(List.of(other, user()));
+
+        List<UserSummaryResponse> users = userService.getAllUsers();
+
+        assertEquals(2, users.size());
+        assertEquals("ana", users.get(0).getUsername());
+        assertEquals("sauce", users.get(1).getUsername());
+        verify(userRepository).findAllByOrderByUsernameAsc();
+    }
+
+    @Test
     void searchUsersDelegaEnElRepositorio() {
         when(userRepository.searchByUsername("sau")).thenReturn(List.of(user()));
 
-        List<User> users = userService.searchUsers("sau");
+        List<UserSummaryResponse> users = userService.searchUsers("sau");
 
         assertEquals(1, users.size());
         assertEquals("sauce", users.get(0).getUsername());
+        assertEquals("sauce@example.com", users.get(0).getEmail());
         verify(userRepository).searchByUsername("sau");
     }
 

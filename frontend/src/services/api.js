@@ -45,6 +45,7 @@ export const voteApi = {
 }
 
 export const userApi = {
+  getAll: () => api.get('/users'),
   search: (query) => api.get(`/users/search?q=${query}`),
   getProfile: (username) => api.get(`/users/${username}`)
 }

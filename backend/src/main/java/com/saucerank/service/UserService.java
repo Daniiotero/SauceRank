@@ -29,7 +29,7 @@ public class UserService {
 
     public List<UserSummaryResponse> getAllUsers() {
         return userRepository.findAllByOrderByUsernameAsc().stream()
-                .map(user -> new UserSummaryResponse(user.getId(), user.getUsername(), user.getEmail()))
+                .map(user -> new UserSummaryResponse(user.getId(), user.getUsername()))
                 .toList();
     }
 
@@ -46,35 +46,37 @@ public class UserService {
                 .replace("%", "\\%")
                 .replace("_", "\\_");
         return userRepository.searchByUsername(escaped).stream()
-                .map(user -> new UserSummaryResponse(user.getId(), user.getUsername(), user.getEmail()))
+                .map(user -> new UserSummaryResponse(user.getId(), user.getUsername()))
                 .toList();
     }
 
-    public UserProfileResponse getUserProfile(Long userId) {
+    public UserProfileResponse getUserProfile(Long userId, Long currentUserId) {
         if (userId == null || userId <= 0) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "ID de usuario no válido");
         }
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "User not found"));
-        return buildProfile(user);
+        return buildProfile(user, currentUserId);
     }
 
-    public UserProfileResponse getUserProfileByUsername(String username) {
+    public UserProfileResponse getUserProfileByUsername(String username, Long currentUserId) {
         if (username == null || username.isBlank()) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "El nombre de usuario es requerido");
         }
         User user = userRepository.findByUsername(username.trim())
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "User not found"));
-        return buildProfile(user);
+        return buildProfile(user, currentUserId);
     }
 
-    private UserProfileResponse buildProfile(User user) {
+    private UserProfileResponse buildProfile(User user, Long currentUserId) {
         List<Vote> votes = voteRepository.findByUserId(user.getId());
 
         UserProfileResponse response = new UserProfileResponse();
         response.setId(user.getId());
         response.setUsername(user.getUsername());
-        response.setEmail(user.getEmail());
+        if (currentUserId != null && currentUserId.equals(user.getId())) {
+            response.setEmail(user.getEmail());
+        }
 
         List<VoteDetailResponse> voteDetails = new ArrayList<>();
         for (Vote vote : votes) {

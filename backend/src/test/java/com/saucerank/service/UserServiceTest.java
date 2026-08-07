@@ -60,7 +60,7 @@ class UserServiceTest {
         song.setId(10L);
         when(voteRepository.findByUserId(1L)).thenReturn(List.of(voteFor(song)));
 
-        UserProfileResponse profile = userService.getUserProfile(1L);
+        UserProfileResponse profile = userService.getUserProfile(1L, 1L);
 
         assertEquals("sauce", profile.getUsername());
         assertEquals("sauce@example.com", profile.getEmail());
@@ -75,11 +75,22 @@ class UserServiceTest {
     }
 
     @Test
+    void getUserProfileOcultaElEmailParaOtrosUsuarios() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user()));
+        when(voteRepository.findByUserId(1L)).thenReturn(List.of());
+
+        UserProfileResponse profile = userService.getUserProfile(1L, 99L);
+
+        assertEquals("sauce", profile.getUsername());
+        assertEquals(null, profile.getEmail());
+    }
+
+    @Test
     void getUserProfileSinVotosDevuelveListaVacia() {
         when(userRepository.findById(1L)).thenReturn(Optional.of(user()));
         when(voteRepository.findByUserId(1L)).thenReturn(List.of());
 
-        UserProfileResponse profile = userService.getUserProfile(1L);
+        UserProfileResponse profile = userService.getUserProfile(1L, 1L);
 
         assertNotNull(profile.getVotes());
         assertTrue(profile.getVotes().isEmpty());
@@ -89,7 +100,7 @@ class UserServiceTest {
     void getUserProfileLanzaSiElUsuarioNoExiste() {
         when(userRepository.findById(99L)).thenReturn(Optional.empty());
 
-        assertThrows(RuntimeException.class, () -> userService.getUserProfile(99L));
+        assertThrows(RuntimeException.class, () -> userService.getUserProfile(99L, 1L));
     }
 
     @Test
@@ -97,9 +108,10 @@ class UserServiceTest {
         when(userRepository.findByUsername("sauce")).thenReturn(Optional.of(user()));
         when(voteRepository.findByUserId(1L)).thenReturn(List.of());
 
-        UserProfileResponse profile = userService.getUserProfileByUsername("sauce");
+        UserProfileResponse profile = userService.getUserProfileByUsername("sauce", 1L);
 
         assertEquals("sauce", profile.getUsername());
+        assertEquals("sauce@example.com", profile.getEmail());
     }
 
     @Test
@@ -123,7 +135,6 @@ class UserServiceTest {
 
         assertEquals(1, users.size());
         assertEquals("sauce", users.get(0).getUsername());
-        assertEquals("sauce@example.com", users.get(0).getEmail());
         verify(userRepository).searchByUsername("sau");
     }
 

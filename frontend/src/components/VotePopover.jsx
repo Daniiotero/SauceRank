@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import StarRating from './StarRating'
 import Icon from './ui/Icon'
 
@@ -36,30 +37,32 @@ export default function VotePopover({ score = 0, onRate, disabled }) {
         {score > 0 && <span className="vote-mobile-score">{score}</span>}
       </div>
 
-      {open && (
-        <div className="vote-modal-backdrop" onClick={() => setOpen(false)}>
-          <div
-            className="vote-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Puntuar canción"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="vote-modal-header">
-              <span className="vote-modal-title">Tu puntuación</span>
-              <button
-                type="button"
-                className="star-btn"
-                aria-label="Cerrar"
-                onClick={() => setOpen(false)}
-              >
-                <Icon name="close" size={14} />
-              </button>
+      {open &&
+        createPortal(
+          <div className="vote-modal-backdrop" onClick={() => setOpen(false)}>
+            <div
+              className="vote-modal"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Puntuar canción"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="vote-modal-header">
+                <span className="vote-modal-title">Tu puntuación</span>
+                <button
+                  type="button"
+                  className="star-btn"
+                  aria-label="Cerrar"
+                  onClick={() => setOpen(false)}
+                >
+                  <Icon name="close" size={14} />
+                </button>
+              </div>
+              <StarRating score={score} onRate={handleRate} disabled={disabled} />
             </div>
-            <StarRating score={score} onRate={handleRate} disabled={disabled} />
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </>
   )
 }

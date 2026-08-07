@@ -667,7 +667,7 @@ ul, ol { list-style: none; }
   font-weight: 600;
   color: var(--text-ice);
   font-variant-numeric: tabular-nums;
-  min-width: 30px;
+  min-width: 5ch;
   text-align: center;
 }
 
@@ -721,15 +721,18 @@ ul, ol { list-style: none; }
   color: var(--text-primary);
 }
 .vote-modal .star-rating {
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 4px;
+  justify-items: center;
 }
-.vote-modal .star-btn {
-  width: 30px;
+.vote-modal .star-rating .star-btn {
+  width: 100%;
+  max-width: 30px;
   height: 30px;
 }
 .vote-modal .star-score {
-  flex-basis: 100%;
+  grid-column: 1 / -1;
   margin-left: 0;
   text-align: center;
 }

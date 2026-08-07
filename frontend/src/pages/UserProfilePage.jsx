@@ -64,9 +64,11 @@ export default function UserProfilePage() {
         <h1 className="display" style={{ fontSize: 26, marginBottom: 2 }}>
           {profile.username}
         </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 'var(--space-4)' }}>
-          {profile.email}
-        </p>
+        {isOwnProfile && profile.email && (
+          <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 'var(--space-4)' }}>
+            {profile.email}
+          </p>
+        )}
         <span className="chip">
           <Icon name="star" size={13} />
           {profile.votes.length} voto{profile.votes.length !== 1 ? 's' : ''}

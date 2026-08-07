@@ -151,9 +151,6 @@ export default function UserSearchPage() {
 									>
 										{u.username}
 									</div>
-									<div style={{ fontSize: 13, color: "var(--text-secondary)" }}>
-										{u.email}
-									</div>
 								</div>
 							</div>
 						</Link>

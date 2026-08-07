@@ -684,6 +684,8 @@ ul, ol { list-style: none; }
   font-weight: 600;
   color: var(--accent-bright);
   font-variant-numeric: tabular-nums;
+  min-width: 2ch;
+  text-align: center;
 }
 
 .vote-modal-backdrop {
@@ -735,6 +737,37 @@ ul, ol { list-style: none; }
   grid-column: 1 / -1;
   margin-left: 0;
   text-align: center;
+}
+
+.spotify-popup {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 30;
+  width: 320px;
+  max-width: 80vw;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-3);
+  padding: var(--space-2);
+}
+.spotify-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: rgba(4, 4, 8, 0.7);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 400;
+}
+.spotify-overlay .spotify-popup {
+  position: static;
+  width: 100%;
+  max-width: 320px;
 }
 
 /* ---- Chip ---- */

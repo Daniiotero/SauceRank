@@ -34,9 +34,9 @@ export default function AlbumPage() {
     setVoting(true)
     try {
       await voteApi.vote(songId, score)
-      setAlbum(prev => prev ? {
-        ...prev,
-        songs: prev.songs.map(song => {
+      setAlbum(prev => {
+        if (!prev) return prev
+        const songs = prev.songs.map(song => {
           if (song.id !== songId) return song
           return {
             ...song,
@@ -44,8 +44,17 @@ export default function AlbumPage() {
             userScore: score,
             voteCount: song.votedByCurrentUser ? song.voteCount : song.voteCount + 1,
           }
-        }),
-      } : prev)
+        })
+        const votedSongs = songs.filter(s => s.votedByCurrentUser && s.userScore > 0)
+        const userVoteCount = votedSongs.length
+        const userScoreSum = votedSongs.reduce((sum, s) => sum + s.userScore, 0)
+        return {
+          ...prev,
+          songs,
+          userVoteCount,
+          userAverageScore: userVoteCount > 0 ? userScoreSum / userVoteCount : null,
+        }
+      })
     } catch (err) {
       alert('Error al votar')
     } finally {
@@ -141,6 +150,24 @@ export default function AlbumPage() {
               <span style={{ color: 'var(--text-muted)' }}>·</span>
               <span style={{ color: 'var(--text-secondary)' }}>
                 {album.voteCount} voto{album.voteCount !== 1 ? 's' : ''}
+              </span>
+            </div>
+          )}
+          {user && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 'var(--space-3)', fontSize: 14 }}>
+              <span className="vote-avg" style={{ display: 'inline-flex', alignItems: 'center', gap: 5, color: 'var(--accent-bright)' }}>
+                <Icon name="star" size={16} style={{ color: 'var(--accent-bright)' }} />
+                {album.userVoteCount > 0 ? album.userAverageScore.toFixed(1) : '—'}
+              </span>
+              <span style={{ color: 'var(--text-muted)' }}>·</span>
+              <span style={{
+                color: album.userVoteCount > 0 ? 'var(--text-secondary)' : 'var(--accent-bright)',
+                fontWeight: album.userVoteCount > 0 ? 400 : 600,
+                letterSpacing: album.userVoteCount > 0 ? 'inherit' : '0.03em'
+              }}>
+                {album.userVoteCount > 0
+                  ? `Tu media en ${album.userVoteCount} canción${album.userVoteCount !== 1 ? 'es' : ''}`
+                  : 'vota ya!'}
               </span>
             </div>
           )}

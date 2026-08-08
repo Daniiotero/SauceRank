@@ -12,6 +12,8 @@ public class AlbumResponse {
     private List<SongResponse> songs;
     private Long voteCount;
     private double averageScore;
+    private Double userAverageScore;
+    private int userVoteCount;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -31,4 +33,8 @@ public class AlbumResponse {
     public void setVoteCount(Long voteCount) { this.voteCount = voteCount; }
     public double getAverageScore() { return averageScore; }
     public void setAverageScore(double averageScore) { this.averageScore = averageScore; }
+    public Double getUserAverageScore() { return userAverageScore; }
+    public void setUserAverageScore(Double userAverageScore) { this.userAverageScore = userAverageScore; }
+    public int getUserVoteCount() { return userVoteCount; }
+    public void setUserVoteCount(int userVoteCount) { this.userVoteCount = userVoteCount; }
 }

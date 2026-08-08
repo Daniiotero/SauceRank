@@ -108,6 +108,45 @@ class AlbumServiceTest {
         SongResponse sr = response.getSongs().get(0);
         assertTrue(sr.isVotedByCurrentUser());
         assertEquals(8, sr.getUserScore());
+        assertEquals(1, response.getUserVoteCount());
+        assertEquals(8.0, response.getUserAverageScore(), 0.001);
+    }
+
+    @Test
+    void getAlbumConUsuarioCalculaMediaPersonalConVariasCanciones() {
+        when(albumRepository.findById(1L)).thenReturn(Optional.of(album(1L)));
+        Song s1 = song(10L, "Kemba Walker");
+        Song s2 = song(11L, "Mi Cubana");
+        when(songRepository.findByAlbumIdOrderByTrackNumber(1L)).thenReturn(List.of(s1, s2));
+        when(voteRepository.findVoteCountsByAlbumId(1L)).thenReturn(List.of());
+
+        when(voteRepository.existsByUserIdAndSongId(5L, 10L)).thenReturn(true);
+        when(voteRepository.existsByUserIdAndSongId(5L, 11L)).thenReturn(true);
+
+        Vote v1 = new Vote();
+        v1.setScore(7);
+        Vote v2 = new Vote();
+        v2.setScore(9);
+        when(voteRepository.findByUserIdAndSongId(5L, 10L)).thenReturn(Optional.of(v1));
+        when(voteRepository.findByUserIdAndSongId(5L, 11L)).thenReturn(Optional.of(v2));
+
+        AlbumResponse response = albumService.getAlbum(1L, 5L);
+
+        assertEquals(2, response.getUserVoteCount());
+        assertEquals(8.0, response.getUserAverageScore(), 0.001);
+    }
+
+    @Test
+    void getAlbumConUsuarioSinVotosNoPoneMediaPersonal() {
+        when(albumRepository.findById(1L)).thenReturn(Optional.of(album(1L)));
+        when(songRepository.findByAlbumIdOrderByTrackNumber(1L)).thenReturn(List.of(song(10L, "Kemba Walker")));
+        when(voteRepository.findVoteCountsByAlbumId(1L)).thenReturn(List.of());
+        when(voteRepository.existsByUserIdAndSongId(5L, 10L)).thenReturn(false);
+
+        AlbumResponse response = albumService.getAlbum(1L, 5L);
+
+        assertEquals(0, response.getUserVoteCount());
+        assertEquals(null, response.getUserAverageScore());
     }
 
     @Test

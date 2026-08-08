@@ -70,6 +70,8 @@ public class AlbumService {
         response.setAverageScore(averageScore);
 
         List<SongResponse> songResponses = new ArrayList<>();
+        double userScoreSum = 0.0;
+        int userVotedSongs = 0;
         for (Song song : songs) {
             SongResponse sr = new SongResponse();
             sr.setId(song.getId());
@@ -85,9 +87,15 @@ public class AlbumService {
                         .map(v -> v.getScore() != null ? v.getScore() : 0)
                         .orElse(0);
                 sr.setUserScore(us);
+                if (us > 0) {
+                    userScoreSum += us;
+                    userVotedSongs++;
+                }
             }
             songResponses.add(sr);
         }
+        response.setUserVoteCount(userVotedSongs);
+        response.setUserAverageScore(userVotedSongs > 0 ? userScoreSum / userVotedSongs : null);
         response.setSongs(songResponses);
         return response;
     }
